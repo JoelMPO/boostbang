@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>BB Gauges | Gauge digital OBD-II · BoostBang</title>
+<meta name="description" content="BB Gauges: gauge digital redondo y rectangular que se conecta al OBD-II de tu carro. RPM con luz de cambio, boost, AFR, temperaturas y el logo de tu auto al encender.">
+<meta property="og:title" content="BB Gauges · BoostBang">
+<meta property="og:description" content="Gauge digital OBD-II con luz de cambio, boost, AFR y el logo de tu auto al encender.">
+<meta property="og:image" content="assets/img/gauges-og.jpg">
+<link rel="icon" type="image/png" href="assets/img/favicon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0b0b0b;--deep:#060606;--y:#E10600;--tx:#F5F5F5;--mu:#9a958a;--bd:#262626;--gr:#2BD46A;
+--hd:'Barlow Condensed','Arial Narrow',Impact,sans-serif;--bo:'Barlow','Helvetica Neue',Arial,sans-serif}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:72px}
+body{margin:0;background:var(--bg);color:var(--tx);font:400 17px/1.6 var(--bo);overflow-x:hidden}
+img,video,svg{max-width:100%;display:block}
+a{color:inherit}
+:focus-visible{outline:3px solid var(--y);outline-offset:3px}
+.wrap{max-width:1240px;margin:0 auto;padding:0 clamp(18px,4vw,48px)}
+h1,h2,h3{font-family:var(--hd);font-weight:800;text-transform:uppercase;line-height:.92;margin:0}
+h2{font-size:clamp(42px,6.5vw,84px)}
+h3{font-size:clamp(24px,2.6vw,32px);line-height:1}
+section{padding:clamp(70px,9vw,130px) 0}
+.eyebrow{font:700 15px var(--hd);letter-spacing:.24em;text-transform:uppercase;color:var(--y);margin:0 0 14px}
+.sub{color:var(--mu);max-width:58ch;margin:18px 0 0}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;font:700 18px/1 var(--hd);letter-spacing:.08em;text-transform:uppercase;text-decoration:none;padding:16px 26px;border:2px solid var(--y);background:var(--y);color:#fff;cursor:pointer;min-height:48px;transition:background .2s,color .2s,transform .1s}
+.btn:hover{background:transparent;color:var(--y)}
+.btn.ghost{background:transparent;color:var(--tx);border-color:#555}
+.btn.ghost:hover{border-color:var(--y);color:var(--y)}
+.btn:active{transform:scale(.98)}
+header{position:sticky;top:0;z-index:50;background:rgba(6,6,6,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--bd)}
+.bar{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+.bar img{height:32px;width:auto}
+.bar nav{display:flex;gap:24px}
+.bar nav a{font:600 16px var(--hd);letter-spacing:.1em;text-transform:uppercase;text-decoration:none}
+.bar nav a:hover{color:var(--y)}
+@media(max-width:760px){.bar nav a.hide-m{display:none}}
+/* hero */
+.hero{position:relative;padding:clamp(40px,6vw,80px) 0 clamp(60px,8vw,110px);overflow:hidden;
+ background:radial-gradient(ellipse 60% 70% at 72% 45%,#3a0707 0,rgba(11,11,11,0) 70%),repeating-linear-gradient(45deg,rgba(255,255,255,.018) 0 3px,transparent 3px 9px),var(--bg)}
+.hero::before,.hero::after{content:"";position:absolute;height:6px;width:340px;background:var(--y);transform:skewX(-30deg);opacity:.85}
+.hero::before{left:-60px;top:70px}.hero::after{right:-60px;bottom:60px}
+.hgrid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,70px);align-items:center}
+.hero h1{font-size:clamp(64px,10vw,150px)}
+.hero h1 b{color:var(--y)}
+.lead{font-size:clamp(18px,1.6vw,21px);color:#d9d4c8;max-width:46ch;margin:22px 0 28px}
+.ctas{display:flex;flex-wrap:wrap;gap:12px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:26px;padding:0;list-style:none}
+.chips li{border:1px solid var(--bd);padding:6px 12px;font:600 14px var(--hd);letter-spacing:.1em;text-transform:uppercase;color:#cfcac0}
+@media(max-width:900px){.hgrid{grid-template-columns:1fr}}
+/* stage */
+.stage{display:flex;flex-direction:column;align-items:center;gap:18px}
+.dev{position:relative;width:min(520px,88vw);aspect-ratio:1;border-radius:50%;touch-action:pan-y;user-select:none;cursor:grab;transition:box-shadow .15s}
+.dev:active{cursor:grabbing}
+.dev svg{width:100%;height:100%}
+.dev.g{box-shadow:0 0 0 3px rgba(43,212,106,.5),0 0 60px rgba(43,212,106,.45)}
+.dev.r{box-shadow:0 0 0 3px rgba(225,6,0,.6),0 0 70px rgba(225,6,0,.6);animation:shk .09s linear infinite}
+@keyframes shk{0%{transform:translate(1px,0)}50%{transform:translate(-1px,1px)}100%{transform:translate(0,-1px)}}
+@media(prefers-reduced-motion:reduce){.dev.r{animation:none}}
+.hint{font:600 14px var(--hd);letter-spacing:.14em;text-transform:uppercase;color:var(--mu);text-align:center;margin:0}
+.ctrl{display:flex;flex-wrap:nowrap;gap:8px;justify-content:center;align-items:center;width:min(520px,100%)}
+.ib{width:48px;height:48px;border:1px solid #3a3a3a;background:#111;color:var(--tx);font:700 22px var(--hd);cursor:pointer;display:grid;place-items:center}
+.ib:hover{border-color:var(--y);color:var(--y)}
+.gas{flex:1;min-width:0;padding-left:10px;padding-right:10px;user-select:none;-webkit-user-select:none;touch-action:none}
+.gas[aria-pressed=true]{background:#fff;color:#000;border-color:#fff}
+.sw{display:flex;gap:10px;justify-content:center}
+.sw button{width:36px;height:36px;border-radius:50%;border:3px solid #222;cursor:pointer;padding:0}
+.sw button[aria-pressed=true]{border-color:#fff;transform:scale(1.12)}
+.sw button:focus-visible{outline-offset:2px}
+.mini-row{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.file{position:relative;overflow:hidden}
+.file input{position:absolute;inset:0;opacity:0;cursor:pointer}
+/* models */
+.models{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;margin-top:44px}
+@media(max-width:860px){.models{grid-template-columns:1fr}}
+.model{border:1px solid var(--bd);background:linear-gradient(180deg,#121212,#0a0a0a);display:flex;flex-direction:column}
+.model .vis{aspect-ratio:16/10;display:grid;place-items:center;background:radial-gradient(circle at 50% 45%,#221010,#080808 70%);border-bottom:1px solid var(--bd);overflow:hidden;padding:18px}
+.model .vis svg{height:100%;width:auto}
+.model .in{padding:24px;display:flex;flex-direction:column;gap:14px;flex:1}
+.tag{align-self:flex-start;font:700 13px var(--hd);letter-spacing:.14em;text-transform:uppercase;background:var(--y);color:#fff;padding:4px 10px;transform:skewX(-10deg)}
+.tag.dim{background:#2a2a2a;color:#cfcac0}
+.vars{display:flex;gap:8px;flex-wrap:wrap}
+.vars button{border:1px solid #3a3a3a;background:#111;color:var(--tx);font:700 16px var(--hd);letter-spacing:.06em;padding:10px 14px;cursor:pointer;min-height:44px}
+.vars button[aria-pressed=true]{border-color:var(--y);color:#fff;background:#2a0505}
+.specs{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.specs li{display:flex;justify-content:space-between;gap:12px;border-bottom:1px solid #1d1d1d;padding:6px 0;font-size:15px}
+.specs li span{color:var(--mu)}
+.price{font:800 32px var(--hd);letter-spacing:.02em}
+.price small{font:600 14px var(--bo);color:var(--mu);letter-spacing:0;margin-left:6px}
+.model .btn{margin-top:auto}
+/* rect replica */
+.rect{width:100%;max-width:440px;aspect-ratio:5/3;background:#0b0b0b;background-image:repeating-linear-gradient(45deg,rgba(255,255,255,.025) 0 2px,transparent 2px 6px);border:10px solid #151515;border-radius:12px;box-shadow:0 20px 50px rgba(0,0,0,.6);padding:10px 12px;display:flex;flex-direction:column;gap:8px;font-family:var(--hd)}
+.rect .segs{display:flex;gap:2px}.rect .segs i{flex:1;height:14px;transform:skewX(-20deg);background:#1c1c1c}
+.rect .cols{flex:1;display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.rect .c{border:1px solid #262626;background:rgba(20,20,20,.85);padding:6px 8px;display:flex;flex-direction:column;line-height:1}
+.rect .k{font-size:10px;letter-spacing:.2em;color:#8a8577}.rect .v{font-size:clamp(26px,4vw,40px);font-weight:700;color:#fff}
+.rect .gear{align-items:center;justify-content:center}.rect .gear .v{font-size:clamp(50px,8vw,78px)}
+/* reads */
+.reads{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:14px;margin-top:40px}
+.rd{border:1px solid var(--bd);padding:18px;background:#0e0e0e}
+.rd b{display:block;font:800 26px var(--hd);text-transform:uppercase}
+.rd span{color:var(--mu);font-size:15px}
+.rd em{font-style:normal;font:700 12px var(--hd);letter-spacing:.14em;color:var(--gr)}
+.rd em.no{color:#e3a33b}
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px;counter-reset:s}
+@media(max-width:860px){.steps{grid-template-columns:1fr}}
+.stp{border-top:3px solid var(--y);padding-top:16px}
+.stp::before{counter-increment:s;content:"0" counter(s);font:800 56px/1 var(--hd);color:var(--y)}
+.stp h3{margin:8px 0}
+.stp p{color:var(--mu);margin:0}
+/* videos */
+.vids{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:18px;margin-top:36px}
+.vids figure{margin:0;border:1px solid var(--bd);background:#000}
+.vids video{width:100%;max-height:70vh;background:#000}
+.vids figcaption{padding:10px 14px;font:700 17px var(--hd);text-transform:uppercase;letter-spacing:.06em}
+/* faq */
+.faq{margin-top:30px;max-width:860px}
+.faq details{border-bottom:1px solid var(--bd);padding:16px 0}
+.faq summary{cursor:pointer;font:700 22px var(--hd);text-transform:uppercase;letter-spacing:.03em;list-style:none;display:flex;justify-content:space-between;gap:16px}
+.faq summary::after{content:"+";color:var(--y)}
+.faq details[open] summary::after{content:"–"}
+.faq p{color:#cfcac0;margin:10px 0 0}
+/* order */
+.order{background:linear-gradient(180deg,#0b0b0b,#150404)}
+.og{display:grid;grid-template-columns:1fr 1.1fr;gap:clamp(30px,5vw,70px);align-items:start}
+@media(max-width:900px){.og{grid-template-columns:1fr}}
+form{display:grid;gap:14px;border:1px solid var(--bd);background:#0d0d0d;padding:clamp(20px,3vw,32px)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.row{grid-template-columns:1fr}}
+label{display:grid;gap:6px;font:700 14px var(--hd);letter-spacing:.12em;text-transform:uppercase;color:#cfcac0}
+input,select,textarea{font:400 16px var(--bo);color:var(--tx);background:#141414;border:1px solid #333;padding:12px;min-height:48px;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--y);outline:none}
+textarea{min-height:90px;resize:vertical}
+.err{color:#ff6b63;font:500 14px var(--bo);text-transform:none;letter-spacing:0;min-height:0}
+.ok{border:1px solid var(--gr);background:#06140b;padding:18px;color:#c9f3d8}
+.note{font-size:14px;color:var(--mu);margin:0}
+footer{border-top:1px solid var(--bd);padding:34px 0;color:var(--mu);font-size:14px}
+footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s,transform .7s}
+.reveal.in{opacity:1;transform:none}
+@media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+</style>
+</head>
+<body>
+<header><div class="wrap bar">
+ <a href="index.html" aria-label="BoostBang, inicio"><img src="assets/img/logoWhite.webp" alt="BoostBang"></a>
+ <nav aria-label="BB Gauges"><a href="#modelos" class="hide-m">Modelos</a><a href="#lee" class="hide-m">Qué lee</a><a href="#faq" class="hide-m">FAQ</a><a href="#reservar">Reservar</a></nav>
+</div></header>
+
+<main>
+<section class="hero"><div class="wrap hgrid">
+ <div>
+  <p class="eyebrow" data-t="heroEyebrow">BoostBang · OBD-II · Plug &amp; play</p>
+  <h1 data-t-html="heroTitle">BB <b>Gauges</b></h1>
+  <p class="lead" data-t="heroLead">El gauge digital que lee la computadora de tu carro: RPM con luz de cambio, boost, AFR y temperaturas. Al encender, el logo de tu auto.</p>
+  <div class="ctas"><a class="btn" href="#reservar">Reservar el mío</a><a class="btn ghost" href="#modelos">Ver modelos</a></div>
+  <ul class="chips"><li>Pantalla táctil</li><li>Luz de cambio</li><li>Tu logo al encender</li><li>Tus colores</li><li>Solo lectura</li></ul>
+ </div>
+ <div class="stage">
+  <div class="dev" id="dev" aria-label="Gauge interactivo. Desliza para cambiar de medidor." role="group"><svg id="g" role="img" aria-label="Gauge BB redondo"></svg></div>
+  <p class="hint" id="hint">Desliza el gauge · mantén el botón para acelerar</p>
+  <div class="ctrl">
+   <button class="ib" id="prev" type="button" aria-label="Medidor anterior">‹</button>
+   <button class="btn gas" id="gas" type="button" aria-pressed="false">Mantén para acelerar</button>
+   <button class="ib" id="next" type="button" aria-label="Medidor siguiente">›</button>
+  </div>
+  <div class="sw" id="sw" role="group" aria-label="Color del gauge"></div>
+  <div class="mini-row">
+   <button class="btn ghost" id="replay" type="button">Ver arranque</button>
+   <label class="btn ghost file">Prueba con tu logo<input type="file" id="logo" accept="image/*" aria-label="Elegir el logo de tu auto para ver el arranque"></label>
+  </div>
+  <p class="note" style="text-align:center">Tu logo solo se usa en esta vista previa; no se sube a ningún lado.</p>
+ </div>
+</div></section>
+
+<section id="modelos"><div class="wrap">
+ <p class="eyebrow">Modelos</p><h2 data-t="modelsTitle">Elige tu formato.</h2>
+ <p class="sub" data-t="modelsText">Mismo software y mismas funciones. Cambia el tamaño y la forma de la pantalla según dónde lo quieras montar.</p>
+ <div class="models" id="models"></div>
+</div></section>
+
+<section id="lee" style="background:#080808;border-top:1px solid var(--bd);border-bottom:1px solid var(--bd)"><div class="wrap">
+ <p class="eyebrow">Datos</p><h2 data-t="readsTitle">Lo que ve tu ECU, en tu tablero.</h2>
+ <p class="sub" data-t="readsText">BB Gauges solo lee datos por el puerto OBD-II: no cambia la programación de tu carro y se quita sin dejar rastro. Al conectarse pregunta qué datos da tu auto y muestra solo esos.</p>
+ <div class="reads" id="reads"></div>
+</div></section>
+
+<section><div class="wrap">
+ <p class="eyebrow">Instalación</p><h2 data-t="installTitle">Listo en minutos.</h2>
+ <div class="steps" id="steps"></div>
+</div></section>
+
+<section id="videos" hidden style="padding-top:0"><div class="wrap">
+ <p class="eyebrow">En acción</p><h2 data-t="videosTitle">Míralo funcionar.</h2>
+ <div class="vids" id="vids"></div>
+</div></section>
+
+<section id="faq" style="padding-top:0"><div class="wrap">
+ <p class="eyebrow">Preguntas</p><h2 data-t="faqTitle">Preguntas frecuentes.</h2>
+ <div class="faq" id="faqs"></div>
+</div></section>
+
+<section id="reservar" class="order"><div class="wrap og">
+ <div>
+  <p class="eyebrow">Preventa</p><h2 data-t="orderTitle">Aparta tu BB Gauge.</h2>
+  <p class="sub" data-t="orderText">Llena el formulario y te escribimos por WhatsApp para confirmar compatibilidad con tu carro, precio y fecha de entrega. Reservar no tiene costo.</p>
+ </div>
+ <div id="formwrap">
+ <form id="of" novalidate>
+  <div class="row">
+   <label>Modelo<select id="f-model" required></select></label>
+   <label>Color de acento<select id="f-color"><option>Rojo</option><option>Naranja</option><option>Azul</option><option>Turquesa</option><option>Hueso</option></select></label>
+  </div>
+  <div class="row">
+   <label>Nombre<input id="f-name" autocomplete="name" required maxlength="80"><span class="err" id="e-name"></span></label>
+   <label>WhatsApp<input id="f-phone" type="tel" autocomplete="tel" inputmode="tel" required maxlength="20" placeholder="6123-4567"><span class="err" id="e-phone"></span></label>
+  </div>
+  <label>Correo (opcional)<input id="f-email" type="email" autocomplete="email" maxlength="120"><span class="err" id="e-email"></span></label>
+  <label>Tu carro (marca, modelo y año)<input id="f-car" required maxlength="120" placeholder="Ford Focus ST 2014"><span class="err" id="e-car"></span></label>
+  <label>Comentarios (opcional)<textarea id="f-notes" maxlength="600" placeholder="¿Qué medidores te interesan más?"></textarea></label>
+  <button class="btn" type="submit" id="f-send">Reservar</button>
+  <p class="note">Al enviar, guardamos tu reserva y se abre WhatsApp con el resumen.</p>
+  <p class="err" id="e-form" role="alert"></p>
+ </form>
+ </div>
+</div></section>
+</main>
+
+<footer><div class="wrap"><span>© <span id="yr"></span> BoostBang · BB Gauges</span><a href="index.html">Volver a BoostBang</a></div></footer>
+
+<script src="assets/js/supa-config.js"></script>
+<script src="assets/js/content.js"></script>
+<script src="assets/js/gauge.js"></script>
+<script>
+const G={
+ whatsapp:"50769502405",
+ texts:{},
+ models:[
+  {id:"R",name:"BB Gauge Redondo",shape:"round",tag:"Preventa",desc:"El look de gauge clásico con pantalla táctil. Desliza para cambiar de medidor.",
+   variants:[{id:"R128",label:'1.28″',specs:[["Pantalla",'1.28″ redonda · 240×240'],["Montaje","Porta-gauge de 52 mm"],["Control","Táctil, deslizando"],["Conexión","OBD-II Bluetooth"]],price:""},
+             {id:"R21",label:'2.1″',specs:[["Pantalla",'2.1″ redonda · 480×480'],["Montaje","Rejilla o tablero"],["Control","Táctil, deslizando"],["Conexión","OBD-II Bluetooth"]],price:""}]},
+  {id:"X",name:"BB Gauge Rectangular",shape:"rect",tag:"Próximamente",desc:"Todo a la vista: barra de cambios, marcha, boost, aceite, agua y una fila de datos.",
+   variants:[{id:"X35",label:'3.5″',specs:[["Pantalla",'3.5″ IPS táctil · 480×320'],["Montaje","Tablero"],["Control","Táctil"],["Conexión","OBD-II"]],price:""},
+             {id:"X43",label:'4.3″',specs:[["Pantalla",'4.3″ IPS táctil · 800×480'],["Montaje","Tablero"],["Control","Táctil"],["Conexión","OBD-II, CAN directo"]],price:""}]}
+ ],
+ reads:[["RPM","Con luz de cambio verde y roja, con tus puntos",1],["Boost","Vacío y presión, con el máximo de la sesión",1],["AFR","La mezcla según la computadora",1],["Temp. agua","Con alerta cuando se calienta",1],["Temp. admisión","Aire que entra al motor",1],["Batería","Voltaje del sistema",1],["Carga y avance","Carga del motor y avance de encendido",1],["Aceite","Temperatura y presión, solo si tu carro las da",0]],
+ steps:[["Conecta","Enchufa el adaptador al puerto OBD-II, debajo del timón."],["Alimenta","Conecta la pantalla a 12 V con el cable incluido. Enciende con el carro."],["Maneja","Arranca con tu logo, se conecta sola y ya ves tus datos."]],
+ videos:[],
+ faq:[["¿Funciona con mi carro?","Funciona con autos con OBD-II, que son la gran mayoría desde 2008 en adelante. Antes de cobrarte confirmamos con tu marca, modelo y año."],
+      ["¿Le hace algo a la computadora del carro?","No. Solo lee datos; no cambia la programación ni borra nada. Se instala y se quita sin dejar rastro."],
+      ["¿Me descarga la batería?","Se alimenta con corriente que solo hay con el carro encendido, y el adaptador entra en reposo cuando apagas."],
+      ["¿Puedo poner el logo de mi carro?","Sí. Al encender sale BoostBang y luego el logo que tú elijas. También eliges el color del gauge."],
+      ["¿Cuánto cuesta y cuándo llega?","Estamos en preventa. Reserva sin costo y te escribimos con el precio y la fecha de entrega."]]
+};
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const COLS=[["Rojo","#E10600"],["Naranja","#FF7A00"],["Azul","#2F7BFF"],["Turquesa","#1FB8A6"],["Hueso","#EDE6D6"]];
+
+BBContent.load(G,'gauges').then(()=>{
+ $("#yr").textContent=new Date().getFullYear();
+ $$("[data-t]").forEach(e=>{const v=G.texts[e.dataset.t];if(v)e.textContent=v});
+ /* ===== gauge interactivo ===== */
+ const svg=$("#g"),dev=$("#dev");
+ const g=BBGauge.Gauge(svg,{gauge:'rpm',list:['rpm','boost','afr','water','oilt','iat','volt']});
+ let rpm=900,thr=false,t=0,last=performance.now(),booting=true,custom=null;
+ svg.addEventListener('zone',e=>{dev.classList.toggle('g',e.detail==='g');dev.classList.toggle('r',e.detail==='r')});
+ const boot=()=>{booting=true;dev.classList.remove('g','r');g.playBoot(custom,custom?'TU AUTO':'BOOSTBANG',()=>booting=false)};
+ boot();
+ (function loop(now){const dt=Math.min(.05,(now-last)/1000);last=now;t+=dt;
+  if(!booting){
+   rpm+= thr? (7200-rpm)*dt*1.15 : (850-rpm)*dt*1.6; rpm=Math.max(800,Math.min(7000,rpm));
+   const load=(rpm-850)/6150;
+   const k=g.st.gauge; g.set(k==='rpm'?rpm:BBGauge.sim(k,t,load));
+  }
+  requestAnimationFrame(loop)})(performance.now());
+ const gas=$("#gas");
+ const on=e=>{e.preventDefault();thr=true;gas.setAttribute('aria-pressed','true');if(g.st.gauge!=='rpm'&&g.st.gauge!=='boost'&&g.st.gauge!=='afr')g.setGauge('rpm')};
+ const off=()=>{thr=false;gas.setAttribute('aria-pressed','false')};
+ gas.addEventListener('pointerdown',on);['pointerup','pointerleave','pointercancel'].forEach(x=>gas.addEventListener(x,off));
+ gas.addEventListener('keydown',e=>{if(e.key===' '||e.key==='Enter'){if(!e.repeat)on(e)}});gas.addEventListener('keyup',e=>{if(e.key===' '||e.key==='Enter')off()});
+ $("#prev").onclick=()=>{if(!booting)g.next(-1)};$("#next").onclick=()=>{if(!booting)g.next(1)};
+ let sx=null;
+ dev.addEventListener('pointerdown',e=>{sx=e.clientX});
+ dev.addEventListener('pointerup',e=>{if(sx==null||booting)return;const d=e.clientX-sx;sx=null;if(Math.abs(d)>40)g.next(d<0?1:-1)});
+ dev.addEventListener('keydown',e=>{if(e.key==='ArrowRight')g.next(1);if(e.key==='ArrowLeft')g.next(-1)});dev.tabIndex=0;
+ $("#sw").innerHTML=COLS.map(([n,c],i)=>`<button type="button" style="background:${c}" aria-label="Color ${n}" aria-pressed="${i===0}" data-c="${c}"></button>`).join("");
+ $$("#sw button").forEach(b=>b.onclick=()=>{$$("#sw button").forEach(x=>x.setAttribute('aria-pressed',x===b));g.setAccent(b.dataset.c);$("#f-color").value=b.getAttribute('aria-label').replace('Color ','')});
+ $("#replay").onclick=boot;
+ $("#logo").onchange=e=>{const f=e.target.files[0];if(!f)return;if(custom)URL.revokeObjectURL(custom);custom=URL.createObjectURL(f);boot()};
+
+ /* ===== modelos ===== */
+ const rectHTML=`<div class="rect" aria-hidden="true"><div class="segs">${'<i></i>'.repeat(26)}</div><div class="cols"><div class="c"><span class="k">BOOST</span><span class="v" data-r="boost">0.0</span><span class="k">PSI</span></div><div class="c gear"><span class="k">MARCHA</span><span class="v" data-r="gear">3</span><span class="k" data-r="rpm">0 RPM</span></div><div class="c"><span class="k">AGUA</span><span class="v">91°</span><span class="k">ACEITE</span><span class="v" style="font-size:clamp(20px,3vw,30px)">98°</span></div></div></div>`;
+ const sel=$("#f-model");
+ $("#models").innerHTML=G.models.map((m,mi)=>`<article class="model reveal" data-m="${mi}">
+  <div class="vis">${m.shape==='round'?`<svg class="mg" role="img" aria-label="${esc(m.name)}"></svg>`:rectHTML}</div>
+  <div class="in"><span class="tag ${m.tag==='Preventa'?'':'dim'}">${esc(m.tag)}</span><h3>${esc(m.name)}</h3><p style="margin:0;color:#cfcac0">${esc(m.desc)}</p>
+  <div class="vars" role="group" aria-label="Tamaño">${m.variants.map((v,vi)=>`<button type="button" aria-pressed="${vi===0}" data-v="${vi}">${esc(v.label)}</button>`).join("")}</div>
+  <ul class="specs"></ul><div class="price"></div>
+  <a class="btn" href="#reservar" data-pick>Reservar este</a></div></article>`).join("");
+ G.models.forEach(m=>m.variants.forEach(v=>sel.insertAdjacentHTML('beforeend',`<option value="${esc(v.id)}">${esc(m.name)} ${esc(v.label)}</option>`)));
+ $$(".model").forEach(card=>{const m=G.models[+card.dataset.m];let vi=0;
+  const draw=()=>{const v=m.variants[vi];card.querySelector('.specs').innerHTML=v.specs.map(([a,b])=>`<li><span>${esc(a)}</span><b>${esc(b)}</b></li>`).join("");
+   card.querySelector('.price').innerHTML=v.price?`${esc(v.price)}`:`Precio por anunciar<small>Reserva sin costo</small>`;
+   card.querySelector('[data-pick]').dataset.id=v.id};
+  card.querySelectorAll('.vars button').forEach(b=>b.onclick=()=>{vi=+b.dataset.v;card.querySelectorAll('.vars button').forEach(x=>x.setAttribute('aria-pressed',x===b));draw()});
+  card.querySelector('[data-pick]').addEventListener('click',e=>{sel.value=e.currentTarget.dataset.id});
+  draw();
+  const s=card.querySelector('.mg');if(s){const mg=BBGauge.Gauge(s,{gauge:'boost'});let tt=Math.random()*5;(function l(){tt+=.016;mg.set(BBGauge.sim('boost',tt));requestAnimationFrame(l)})()}
+ });
+ // animación del rectangular
+ const segs=$$(".rect .segs i");if(segs.length){let tt=0;(function l(){tt+=.016;const load=.5+.5*Math.sin(tt*.7),r=900+load*5900;
+  segs.forEach((s,i)=>{const v=(i+.5)/segs.length*7000;s.style.background=v>r?(v>=6500?'#3A0A08':v>=6000?'#0E2A17':'#1c1c1c'):(r>=6500?'#E10600':v>=6000?'#2BD46A':'#EDE6D6')});
+  const q=$('[data-r="boost"]');if(q)q.textContent=(-10+load*29).toFixed(1);$('[data-r="rpm"]').textContent=Math.round(r).toLocaleString('en-US')+' RPM';
+  const ge=$('[data-r="gear"]');ge.style.color=r>=6500?'#E10600':r>=6000?'#2BD46A':'#fff';requestAnimationFrame(l)})()}
+
+ /* ===== lee, pasos, videos, faq ===== */
+ $("#reads").innerHTML=G.reads.map(([a,b,s])=>`<div class="rd reveal"><b>${esc(a)}</b><span>${esc(b)}</span><br><em class="${s?'':'no'}">${s?'ESTÁNDAR OBD-II':'SEGÚN EL CARRO'}</em></div>`).join("");
+ $("#steps").innerHTML=G.steps.map(([a,b])=>`<div class="stp reveal"><h3>${esc(a)}</h3><p>${esc(b)}</p></div>`).join("");
+ if(G.videos&&G.videos.length){$("#videos").hidden=false;$("#vids").innerHTML=G.videos.map(v=>`<figure class="reveal"><video controls playsinline preload="metadata" ${v.poster?`poster="${esc(v.poster)}"`:''} src="${esc(v.url)}"></video>${v.title?`<figcaption>${esc(v.title)}</figcaption>`:''}</figure>`).join("")}
+ $("#faqs").innerHTML=G.faq.map(([q,a])=>`<details><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join("");
+
+ /* ===== reserva ===== */
+ const f=$("#of");
+ f.addEventListener('submit',async e=>{e.preventDefault();
+  const v=id=>$(id).value.trim();let bad=false;
+  const chk=(id,cond,msg)=>{$("#e-"+id).textContent=cond?"":msg;if(!cond)bad=true};
+  chk('name',v('#f-name').length>=2,'Escribe tu nombre.');
+  chk('phone',/^[+\d][\d\s-]{6,18}$/.test(v('#f-phone')),'Escribe un número de WhatsApp válido.');
+  chk('email',!v('#f-email')||/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(v('#f-email')),'Revisa el correo.');
+  chk('car',v('#f-car').length>=3,'Escribe la marca, modelo y año de tu carro.');
+  if(bad){$("#e-form").textContent="Revisa los campos marcados.";return}
+  $("#e-form").textContent="";
+  const opt=$("#f-model").selectedOptions[0].textContent;
+  const o={product:'BB Gauges',variant:opt,accent:v('#f-color'),name:v('#f-name'),phone:v('#f-phone'),email:v('#f-email')||null,car:v('#f-car'),notes:v('#f-notes')||null};
+  const btn=$("#f-send");btn.disabled=true;btn.textContent="Enviando…";
+  let saved=true;try{await BBContent.order(o)}catch(err){saved=false}
+  const msg=`¡Hola BoostBang! Quiero reservar un ${opt} (color ${o.accent}).\nNombre: ${o.name}\nCarro: ${o.car}${o.notes?`\nComentarios: ${o.notes}`:''}`;
+  const wa=`https://wa.me/${G.whatsapp}?text=${encodeURIComponent(msg)}`;
+  $("#formwrap").innerHTML=`<div class="ok" role="status"><h3>${saved?'¡Reserva recibida!':'Casi listo'}</h3><p>${saved?'Te escribimos pronto por WhatsApp para confirmar.':'No pudimos guardar la reserva en línea. Envíanosla por WhatsApp y la anotamos.'}</p><a class="btn" href="${wa}" target="_blank" rel="noopener">Abrir WhatsApp</a></div>`;
+  window.open(wa,'_blank','noopener');
+ });
+ /* aparecer al hacer scroll */
+ const io=new IntersectionObserver(es=>es.forEach(x=>{if(x.isIntersecting){x.target.classList.add('in');io.unobserve(x.target)}}),{threshold:.12});
+ $$(".reveal").forEach(x=>io.observe(x));
+});
+</script>
+</body>
+</html>
