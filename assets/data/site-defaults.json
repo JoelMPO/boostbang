@@ -1,0 +1,574 @@
+{
+ "heroImage": "assets/img/mustang.webp",
+ "heroPos": "50% 63%",
+ "heroAlt": "Ford Mustang GT negro haciendo un burnout frente al público en un evento de autos",
+ "themes": [
+  {
+   "t": "Proyectos",
+   "d": "Autos modificados, proyectos personales y creatividad mecánica.",
+   "img": "assets/img/toy_int.webp",
+   "pos": "50% 50%",
+   "alt": "Interior de un Toyota modificado con instrumentos adicionales"
+  },
+  {
+   "t": "Cultura",
+   "d": "Racing, Drift, Tuning & lifestyle.",
+   "img": "assets/img/bmw.webp",
+   "pos": "50% 55%",
+   "alt": "BMW coupé blanco con livery Drift King sobre un remolque al atardecer"
+  },
+  {
+   "t": "Comunidad",
+   "d": "Las personas, los encuentros y las historias detrás de cada máquina.",
+   "img": "assets/img/bike.webp",
+   "pos": "50% 60%",
+   "alt": "Piloto en una moto Suzuki personalizada frente al público en un encuentro de autos"
+  }
+ ],
+ "categories": [
+  "Eventos",
+  "Drift",
+  "Proyectos"
+ ],
+ "gallery": [
+  {
+   "cat": "Proyectos",
+   "shape": "land big",
+   "title": "Corolla T-Sport, perfil",
+   "img": "assets/img/toy_side.webp",
+   "pos": "50% 56%",
+   "alt": "Toyota hatchback gris con rines plateados, visto de perfil frente a una estación de servicio"
+  },
+  {
+   "cat": "Eventos",
+   "shape": "sq",
+   "title": "Comunidad BoostBang",
+   "img": "assets/img/com4.webp",
+   "pos": "50% 50%",
+   "alt": "Joven con camiseta BoostBang celebrando sobre un vehículo entre el público de un evento"
+  },
+  {
+   "cat": "Proyectos",
+   "shape": "land big",
+   "title": "Toyota Corolla AE86 GTS",
+   "img": "assets/img/ae_d.webp",
+   "pos": "50% 25%",
+   "alt": "Toyota Corolla AE86 GTS gris y negro con rines blancos y una bandera de Panamá"
+  },
+  {
+   "cat": "Drift",
+   "shape": "port",
+   "title": "BMW Drift King",
+   "img": "assets/img/bmw.webp",
+   "pos": "50% 50%",
+   "alt": "BMW coupé blanco con livery Drift King y rines de colores sobre un remolque"
+  },
+  {
+   "cat": "Proyectos",
+   "shape": "port",
+   "title": "Detalle del rin",
+   "img": "assets/img/toy_wheel.webp",
+   "pos": "50% 60%",
+   "alt": "Rin plateado con caliper rojo en la parte trasera de un Toyota hatchback gris"
+  },
+  {
+   "cat": "Proyectos",
+   "shape": "port",
+   "title": "AE86, interior",
+   "img": "assets/img/ae_b.webp",
+   "pos": "50% 50%",
+   "alt": "Interior del AE86 con volante deportivo y un instrumento adicional encendido en rojo"
+  },
+  {
+   "cat": "Proyectos",
+   "shape": "land",
+   "title": "350Z · Los Yectos",
+   "img": "assets/img/z_b.webp",
+   "pos": "50% 62%",
+   "alt": "Nissan 350Z naranja de noche con faros morados y reflejo rojo en el pavimento"
+  },
+  {
+   "cat": "Proyectos",
+   "shape": "port",
+   "title": "350Z, bajo el capó · Los Yectos",
+   "img": "assets/img/z_c.webp",
+   "pos": "45% 55%",
+   "alt": "Nissan 350Z naranja con el capó abierto mostrando el motor"
+  },
+  {
+   "cat": "Eventos",
+   "shape": "port",
+   "title": "Comunidad BoostBang",
+   "img": "assets/img/com2.webp",
+   "pos": "50% 50%",
+   "alt": "Hombre junto a un Toyota con placa 2ZZ-GE en un evento"
+  },
+  {
+   "cat": "Drift",
+   "shape": "land",
+   "title": "Corvette, burnout al atardecer",
+   "img": "assets/img/vette.webp",
+   "pos": "50% 58%",
+   "alt": "Corvette roja girando entre humo de llantas detrás de una valla al atardecer"
+  },
+  {
+   "cat": "Drift",
+   "shape": "port",
+   "title": "Mustang GT, burnout",
+   "img": "assets/img/mustang.webp",
+   "pos": "50% 55%",
+   "alt": "Ford Mustang GT negro haciendo un burnout con humo mientras el público mira detrás de las vallas"
+  },
+  {
+   "cat": "Proyectos",
+   "shape": "port",
+   "title": "Nissan 350Z manual · Los Yectos",
+   "img": "assets/img/z_a.webp",
+   "pos": "50% 50%",
+   "alt": "Nissan 350Z naranja de noche con rines plateados"
+  },
+  {
+   "cat": "Proyectos",
+   "shape": "port",
+   "title": "Corolla T-Sport, vista trasera",
+   "img": "assets/img/toy_rear.webp",
+   "pos": "50% 50%",
+   "alt": "Toyota hatchback gris visto desde atrás en un estacionamiento de grava"
+  },
+  {
+   "cat": "Proyectos",
+   "shape": "sq",
+   "title": "Sesión de garage",
+   "img": "assets/img/mech.webp",
+   "pos": "50% 50%",
+   "alt": "Foto en blanco y negro de un hombre trabajando en la parte trasera de un auto junto al escape"
+  },
+  {
+   "cat": "Eventos",
+   "shape": "sq",
+   "title": "Suzuki en el encuentro",
+   "img": "assets/img/bike.webp",
+   "pos": "50% 63%",
+   "alt": "Piloto en una moto Suzuki personalizada con rayos amarillos en un evento de autos"
+  },
+  {
+   "cat": "Proyectos",
+   "shape": "port",
+   "title": "Interior del Corolla T-Sport",
+   "img": "assets/img/toy_int.webp",
+   "pos": "50% 50%",
+   "alt": "Interior de un Toyota con volante, instrumentos adicionales y asientos negros con detalles rojos"
+  },
+  {
+   "cat": "Eventos",
+   "shape": "sq",
+   "title": "Comunidad BoostBang",
+   "img": "assets/img/com3.webp",
+   "pos": "50% 50%",
+   "alt": "Joven sobre una moto de enduro con rayos naranjas durante el atardecer"
+  },
+  {
+   "cat": "Proyectos",
+   "shape": "port",
+   "title": "Corolla AE86 GTS, frente",
+   "img": "assets/img/ae_a.webp",
+   "pos": "38% 50%",
+   "alt": "Frente de un Toyota Corolla AE86 en la oscuridad con placa AE-86 y faros amarillos"
+  },
+  {
+   "cat": "Eventos",
+   "shape": "port",
+   "title": "Comunidad BoostBang",
+   "img": "assets/img/com1.webp",
+   "pos": "50% 50%",
+   "alt": "Piloto con máscara de calavera y su acompañante sobre una moto en un evento de autos"
+  },
+  {
+   "cat": "Proyectos",
+   "shape": "land",
+   "title": "Corolla T-Sport en carretera",
+   "img": "assets/img/toy_road.webp",
+   "pos": "50% 60%",
+   "alt": "Toyota hatchback oscuro avanzando por una autopista al atardecer"
+  },
+  {
+   "cat": "Eventos",
+   "shape": "sq",
+   "title": "Comunidad BoostBang",
+   "img": "assets/img/com6.webp",
+   "pos": "50% 50%",
+   "alt": "Tres amigos sentados en la compuerta de una camioneta verde saludando a la cámara"
+  },
+  {
+   "cat": "Eventos",
+   "shape": "sq",
+   "title": "Comunidad BoostBang",
+   "img": "assets/img/com5.webp",
+   "pos": "50% 50%",
+   "alt": "Hombre con sombrero sobre un cuatrimoto rojo frente a las vallas de un evento"
+  },
+  {
+   "cat": "Proyectos",
+   "shape": "land",
+   "title": "Toyota Corolla AE86 GTS Twin Cam 16",
+   "img": "assets/img/ae_c.webp",
+   "pos": "50% 40%",
+   "alt": "Toyota Corolla AE86 gris y negro con rines blancos, visto de lado y desde atrás"
+  }
+ ],
+ "builds": [
+  {
+   "name": "Corolla T-Sport",
+   "makeModel": "Toyota · Swap 3S-GTE",
+   "img": "assets/img/toy_side.webp",
+   "pos": "50% 54%",
+   "alt": "Toyota Corolla T-Sport gris con rines plateados visto de perfil",
+   "demo": false,
+   "desc": "Toyota Corolla T-Sport que de fábrica trae un motor 2ZZ y recibió un swap a 3S-GTE. Se ajustó con AFC a 13 libras y entregó 235 hp a las ruedas. Es un proyecto especial: son autos poco comunes en Panamá y este es el primero con swap 3S en el país.",
+   "mods": [
+    "Motor de fábrica 2ZZ, con swap a 3S-GTE",
+    "Ajustado con AFC a 13 libras",
+    "235 hp a las ruedas"
+   ],
+   "extra": [
+    {
+     "img": "assets/img/toy_rear.webp",
+     "pos": "50% 54%",
+     "alt": "Corolla T-Sport gris visto desde atrás"
+    },
+    {
+     "img": "assets/img/toy_wheel.webp",
+     "pos": "50% 71%",
+     "alt": "Rin plateado con caliper rojo del Corolla T-Sport"
+    },
+    {
+     "img": "assets/img/toy_int.webp",
+     "pos": "50% 48%",
+     "alt": "Interior del Corolla T-Sport con instrumentos adicionales"
+    }
+   ]
+  },
+  {
+   "name": "Laurel C33 + Altima GTS R",
+   "makeModel": "Nissan · by Los Yectos",
+   "img": "assets/img/lau_a.webp",
+   "pos": "50% 82%",
+   "alt": "Nissan Laurel C33 y Nissan Altima GTS R vistos desde atrás de noche, con luces de colores bajo los autos",
+   "demo": false,
+   "desc": "Dos drift projects de Los Yectos: el Nissan Laurel C33 y el Nissan Altima GTS R. Son muy especiales: los dos son 1/1 en Panamá y comparten plataforma. Ambos llevan motor RB24 carburado y tracción trasera. El Laurel C33 es JDM.",
+   "mods": [
+    "Drift projects, 1/1 en Panamá (ambos)",
+    "Misma plataforma",
+    "Motor RB24 carburado",
+    "Tracción trasera"
+   ],
+   "extra": [
+    {
+     "img": "assets/img/lau_b.webp",
+     "pos": "50% 100%",
+     "alt": "Nissan Laurel C33 y Altima GTS R al atardecer, de frente, con rines dorados y plateados"
+    },
+    {
+     "img": "assets/img/lau_c.webp",
+     "pos": "50% 6%",
+     "alt": "Collage del Laurel C33 y el Altima GTS R: frente, luces traseras LED, placas y el emblema Laurel Since 1968"
+    }
+   ]
+  },
+  {
+   "name": "“El Nigga”",
+   "makeModel": "BMW · Proyecto de drift",
+   "img": "assets/img/bmw.webp",
+   "pos": "50% 53%",
+   "alt": "BMW coupé blanco con livery Drift King sobre un remolque",
+   "demo": false,
+   "desc": "Proyecto de drift apodado “El Nigga”, de los amigos de Royal Street. Recientemente se le instaló turbo.",
+   "mods": [
+    "Turbo instalado recientemente"
+   ],
+   "extra": []
+  }
+ ],
+ "community": [
+  {
+   "img": "assets/img/com1.webp",
+   "pos": "50% 50%",
+   "title": "Comunidad BoostBang",
+   "cat": "Comunidad",
+   "alt": "Piloto con máscara de calavera y su acompañante sobre una moto en un evento de autos"
+  },
+  {
+   "img": "assets/img/com2.webp",
+   "pos": "50% 50%",
+   "title": "Comunidad BoostBang",
+   "cat": "Comunidad",
+   "alt": "Hombre junto a un Toyota con placa 2ZZ-GE en un evento"
+  },
+  {
+   "img": "assets/img/com3.webp",
+   "pos": "50% 50%",
+   "title": "Comunidad BoostBang",
+   "cat": "Comunidad",
+   "alt": "Joven sobre una moto de enduro con rayos naranjas durante el atardecer"
+  },
+  {
+   "img": "assets/img/com4.webp",
+   "pos": "50% 50%",
+   "title": "Comunidad BoostBang",
+   "cat": "Comunidad",
+   "alt": "Joven con camiseta BoostBang celebrando sobre un vehículo entre el público de un evento"
+  },
+  {
+   "img": "assets/img/com5.webp",
+   "pos": "50% 50%",
+   "title": "Comunidad BoostBang",
+   "cat": "Comunidad",
+   "alt": "Hombre con sombrero sobre un cuatrimoto rojo frente a las vallas de un evento"
+  },
+  {
+   "img": "assets/img/com6.webp",
+   "pos": "50% 50%",
+   "title": "Comunidad BoostBang",
+   "cat": "Comunidad",
+   "alt": "Tres amigos sentados en la compuerta de una camioneta verde saludando a la cámara"
+  }
+ ],
+ "shirt": {
+  "price": 25,
+  "sizes": [
+   "S",
+   "M",
+   "L",
+   "XL",
+   "XXL",
+   "XXXL"
+  ],
+  "gift": "Souvenir incluido",
+  "colors": [
+   {
+    "name": "Negro",
+    "css": "#0b0b0b"
+   },
+   {
+    "name": "Blanco",
+    "css": "#f5f5f5"
+   },
+   {
+    "name": "Tie Dye",
+    "css": "conic-gradient(from 30deg,#ff2d95,#ffd400,#39e75f,#27c4ff,#8a4dff,#ff2d95)"
+   }
+  ]
+ },
+ "custom": {
+  "name": "Custom Tshirt",
+  "lead": "Tu auto, tu camiseta",
+  "img": "assets/img/custom.webp",
+  "alt": "Cartel Custom Design: de la foto de un auto a su ilustración, junto a varios diseños de autos tuner",
+  "steps": [
+   "Mándanos por WhatsApp una foto de tu auto.",
+   "Te enviamos 3 diseños basados en tu auto.",
+   "Tú eliges el que más te guste y lo llevamos a tu camiseta."
+  ],
+  "alt2": "¿Prefieres algo ya listo? Tenemos más de 300 diseños. Te enviamos el link por WhatsApp para que elijas el tuyo.",
+  "ctaPhoto": "Enviar la foto de mi auto",
+  "msgPhoto": "¡Hola BoostBang! Quiero una Custom Tshirt. Les paso la foto de mi auto.",
+  "ctaDesigns": "Ver los +300 diseños",
+  "msgDesigns": "¡Hola BoostBang! Quiero ver los más de 300 diseños para elegir mi camiseta."
+ },
+ "keychain": {
+  "name": "Llaveros",
+  "price": 3.5,
+  "desc": "Llaveros con los diseños de BoostBang y Los Yectos.",
+  "msg": "¡Hola BoostBang! Me interesan los llaveros ($3.50). ¿Me confirman disponibilidad?",
+  "slides": [
+   {
+    "img": "assets/img/kc_ill.webp",
+    "pos": "50% 50%",
+    "alt": "Ilustración de llaveros de Los Yectos y BoostBang con detalles de cada diseño"
+   },
+   {
+    "img": "assets/img/kc_real.webp",
+    "pos": "50% 50%",
+    "alt": "Foto real de varios llaveros de Los Yectos y BoostBang sobre una mesa de madera"
+   }
+  ]
+ },
+ "products": [
+  {
+   "name": "Camiseta Toyota AE86",
+   "img": "assets/img/m_ae86.webp",
+   "alt": "Camiseta negra: logo BoostBang en el pecho y, en la espalda, un Toyota AE86 rojo frente a edificios de Tokio",
+   "options": "Estampado en frente y espalda"
+  },
+  {
+   "name": "Camiseta Nissan GT-R BNR34",
+   "img": "assets/img/m_gtr.webp",
+   "alt": "Camiseta negra: logo BoostBang en el pecho y, en la espalda, un Nissan GT-R BNR34 con livery HKS",
+   "options": "Estampado en frente y espalda"
+  },
+  {
+   "name": "Camiseta Genesis Coupe",
+   "img": "assets/img/m_gen.webp",
+   "alt": "Camiseta negra: logo BoostBang en el pecho y, en la espalda, un collage de un Genesis Coupe negro con rines dorados",
+   "options": "Estampado en frente y espalda"
+  },
+  {
+   "name": "Camiseta Drift Fighter",
+   "img": "assets/img/m_drift.webp",
+   "alt": "Camiseta negra: logo BoostBang a color en el pecho y, en la espalda, un demonio oni rojo sobre una consola con un auto en llamas",
+   "options": "Estampado en frente y espalda"
+  },
+  {
+   "name": "Camiseta Eat Sleep and Drift",
+   "img": "assets/img/m_esd.webp",
+   "alt": "Camiseta negra: logo BoostBang en el pecho y, en la espalda, un sedán negro derrapando frente a una montaña con sol rojo",
+   "options": "Estampado en frente y espalda"
+  },
+  {
+   "name": "Camiseta Kill All Tires",
+   "img": "assets/img/m_kat.webp",
+   "alt": "Camiseta negra: logo BoostBang en el pecho y, en la espalda, el texto Kill All Tires en colores neón",
+   "options": "Estampado en frente y espalda"
+  },
+  {
+   "name": "Camiseta Punisher Neon",
+   "img": "assets/img/m_pun.webp",
+   "alt": "Camiseta negra: logo BoostBang en el pecho y, en la espalda, un Dodge Neon negro con el texto Punisher Neon",
+   "options": "Estampado en frente y espalda"
+  },
+  {
+   "name": "Camiseta Fuel The Summer",
+   "img": "assets/img/m_vp.webp",
+   "alt": "Camiseta negra: logo BoostBang en el pecho y, en la espalda, un diseño retro de verano con palmeras y el texto Fuel The Summer",
+   "options": "Estampado en frente y espalda"
+  },
+  {
+   "name": "Camiseta Calavera Turbo",
+   "img": "assets/img/m_skull.webp",
+   "alt": "Camiseta negra: logo BoostBang en el pecho y, en la espalda, una calavera verde con turbos como ojos y un múltiple de admisión encima",
+   "options": "Estampado en frente y espalda"
+  },
+  {
+   "name": "Camiseta Hakosuka",
+   "img": "assets/img/m_hako.webp",
+   "alt": "Camiseta blanca: logo BoostBang en el pecho y, en la espalda, un Hakosuka visto de frente y de atrás con caracteres japoneses en rojo",
+   "options": "Estampado en frente y espalda",
+   "color": "Blanco"
+  },
+  {
+   "name": "Camiseta Los Yectos",
+   "img": "assets/img/losy.webp",
+   "pos": "50% 62%",
+   "alt": "Camiseta negra con el estampado de Los Yectos: letras metálicas y un esqueleto con capucha y guadaña, junto a un motor",
+   "options": "Estampado Los Yectos",
+   "group": "Los Yectos",
+   "wide": true
+  }
+ ],
+ "designs": [
+  {
+   "code": "BB-0231",
+   "name": "Evolution IX",
+   "make": "Mitsubishi",
+   "img": "assets/designs/BB-0231.webp"
+  },
+  {
+   "code": "BB-0213",
+   "name": "BMW E30 M3",
+   "make": "BMW",
+   "img": "assets/designs/BB-0213.webp"
+  },
+  {
+   "code": "BB-0251",
+   "name": "Evo X Cómic",
+   "make": "Mitsubishi",
+   "img": "assets/designs/BB-0251.webp"
+  },
+  {
+   "code": "BB-0242",
+   "name": "Godzilla Generaciones",
+   "make": "Nissan",
+   "img": "assets/designs/BB-0242.webp"
+  },
+  {
+   "code": "BB-0244",
+   "name": "GT-R R35 Cómic",
+   "make": "Nissan",
+   "img": "assets/designs/BB-0244.webp"
+  },
+  {
+   "code": "BB-0237",
+   "name": "Godzilla Red",
+   "make": "Nissan",
+   "img": "assets/designs/BB-0237.webp"
+  },
+  {
+   "code": "BB-0276",
+   "name": "911 Summer",
+   "make": "Porsche",
+   "img": "assets/designs/BB-0276.webp"
+  },
+  {
+   "code": "BB-0286",
+   "name": "Touge Battle",
+   "make": "Toyota / Nissan",
+   "img": "assets/designs/BB-0286.webp"
+  },
+  {
+   "code": "BB-0284",
+   "name": "Supra Legends",
+   "make": "Toyota",
+   "img": "assets/designs/BB-0284.webp"
+  },
+  {
+   "code": "BB-0331",
+   "name": "Skyline R34 Tokio",
+   "make": "Nissan",
+   "img": "assets/designs/BB-0331.webp"
+  },
+  {
+   "code": "BB-0320",
+   "name": "Hakosuka",
+   "make": "Nissan",
+   "img": "assets/designs/BB-0320.webp"
+  },
+  {
+   "code": "BB-0549",
+   "name": "MX-5 Miata",
+   "make": "Mazda",
+   "img": "assets/designs/BB-0549.webp"
+  },
+  {
+   "code": "BB-0520",
+   "name": "Supra Japanese Legend",
+   "make": "Toyota",
+   "img": "assets/designs/BB-0520.webp"
+  },
+  {
+   "code": "BB-0521",
+   "name": "Supra Fuji",
+   "make": "Toyota",
+   "img": "assets/designs/BB-0521.webp"
+  }
+ ],
+ "reviews": [],
+ "texts": {
+  "heroEyebrow": "Cultura automotriz · Pasión por los motores",
+  "heroTitle": "No son solo autos\nes toda una cultura",
+  "heroLead": "Máquinas, proyectos, historias y personas unidas por la misma pasión. Bienvenido a BoostBang.",
+  "introTitle": "Más que máquinas. Una forma de vida.",
+  "introText": "BoostBang nace de nuestra pasión por los autos y todo lo que pasa a su alrededor. Desde proyectos armados pieza por pieza hasta encuentros, fotografía y nuevas amistades, celebramos la cultura que nos mueve.",
+  "gaugesTitle": "BB Gauges",
+  "gaugesText": "Gauge digital que se conecta al OBD-II de tu carro: RPM con luz de cambio, boost, AFR, temperaturas y el logo de tu auto al encender.",
+  "reviewsTitle": "Lo que dice la comunidad.",
+  "galleryTitle": "Car Shots.",
+  "galleryText": "Cada auto tiene una historia. Cada proyecto tiene identidad.",
+  "buildsTitle": "Pasión por los motores.",
+  "merchTitle": "Representa la cultura.",
+  "merchText": "Lleva BoostBang contigo. Merch inspirado en los autos, la cultura urbana y todo lo que nos mueve.",
+  "designsTitle": "Catálogo de diseños",
+  "designsText": "Elige un diseño, anota su código y pídelo en tu camiseta por WhatsApp.",
+  "communityTitle": "La cultura la construimos entre todos.",
+  "communityText": "Cada proyecto tiene una historia. Queremos escuchar la tuya. Síguenos, comparte tu proyecto y sé parte de la comunidad BoostBang."
+ }
+}
