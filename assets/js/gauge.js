@@ -157,22 +157,23 @@ function Panel(svg,opt={}){
   <rect width="${W}" height="${H}" rx="6" fill="url(#${id}gl)" pointer-events="none"/>`;
  const L=svg.querySelector('.L'),FL=svg.querySelector('.FL');
  const face=el('g',{},L);
- // luces de cambio superiores
- const leds=el('g',{},face);const N=15,LW=(W-80)/N;const ledEls=[];
- for(let i=0;i<N;i++){ledEls.push(el('rect',{x:40+i*LW+3,y:16,width:LW-6,height:14,rx:3,fill:'#1a1a1a'},leds))}
+ // barra de cambio segmentada (0–7k) con números
+ const leds=el('g',{},face);const N=28,X0=34,BW=W-68,SW=BW/N,ledEls=[];
+ for(let i=0;i<N;i++){const x=X0+i*SW;ledEls.push(el('path',{d:`M${x+6} 14H${x+SW-1}L${x+SW-6} 40H${x+1}Z`,fill:'#1d1d1d'},leds))}
+ for(let k=0;k<=7;k++){const t=el('text',{x:X0+k*BW/7,y:58,'text-anchor':'middle','font-family':HD,'font-weight':600,'font-size':13,fill:k>=7?'#FF4D42':'#8A8577'},leds);t.textContent=k}
  // tacómetro central
- const cx=400,cy=270,R=172,ARC2=2*Math.PI*R*.75,C2=2*Math.PI*R;
+ const cx=400,cy=286,R=156,ARC2=2*Math.PI*R*.75,C2=2*Math.PI*R;
  el('circle',{cx,cy,r:R,transform:`rotate(135 ${cx} ${cy})`,fill:'none',stroke:'#1C1C1C','stroke-width':18,'stroke-dasharray':`${ARC2} ${C2}`},face);
  const fr=x=>clamp(x/7000);
  [[6000,6500,'#0E3A1E'],[6500,7000,'#4A0D0A']].forEach(z=>{const a=fr(z[0])*ARC2,b=fr(z[1])*ARC2;el('circle',{cx,cy,r:R,transform:`rotate(135 ${cx} ${cy})`,fill:'none',stroke:z[2],'stroke-width':18,'stroke-dasharray':`${b-a} ${C2}`,'stroke-dashoffset':-a},face)});
  const rf=el('circle',{cx,cy,r:R,transform:`rotate(135 ${cx} ${cy})`,fill:'none','stroke-width':18,'stroke-dasharray':`0 ${C2}`,stroke:st.accent},face);
  for(let i=0;i<=14;i++){const f=i/14,maj=i%2===0;const [x1,y1]=pt(f,R-16,cx,cy),[x2,y2]=pt(f,R-(maj?36:26),cx,cy);
   el('line',{x1,y1,x2,y2,stroke:f*7000>=6500?'#8A2A24':maj?'#EDE6D6':'#5A5650','stroke-width':maj?3:1.5},face);
-  if(maj){const [lx,ly]=pt(f,R-58,cx,cy);const t=el('text',{x:lx,y:ly+8,'text-anchor':'middle','font-family':HD,'font-weight':600,'font-size':24,fill:f*7000>=6500?'#FF4D42':'#A8A396'},face);t.textContent=i/2}}
- const gl=el('text',{x:cx,y:cy-62,'text-anchor':'middle','font-family':HD,'font-weight':700,'font-size':16,'letter-spacing':5,fill:'#8A8577'},face);gl.textContent='MARCHA';
- const gear=el('text',{x:cx,y:cy+52,'text-anchor':'middle','font-family':HD,'font-weight':800,'font-size':150,fill:'#fff'},face);
- const rpmT=el('text',{x:cx,y:cy+92,'text-anchor':'middle','font-family':HD,'font-weight':700,'font-size':34,fill:'#fff'},face);
- const zoneG=el('g',{transform:`translate(${cx} ${cy+128})`},face);const zR=el('rect',{x:-62,y:-15,width:124,height:26,transform:'skewX(-12)',fill:'#161616'},zoneG);
+  if(maj&&i>0&&i<14){const [lx,ly]=pt(f,R-58,cx,cy);const t=el('text',{x:lx,y:ly+8,'text-anchor':'middle','font-family':HD,'font-weight':600,'font-size':24,fill:f*7000>=6500?'#FF4D42':'#A8A396'},face);t.textContent=i/2}}
+ const gl=el('text',{x:cx,y:cy-58,'text-anchor':'middle','font-family':HD,'font-weight':700,'font-size':16,'letter-spacing':5,fill:'#8A8577'},face);gl.textContent='MARCHA';
+ const gear=el('text',{x:cx,y:cy+46,'text-anchor':'middle','font-family':HD,'font-weight':800,'font-size':136,fill:'#fff'},face);
+ const rpmT=el('text',{x:cx,y:cy+84,'text-anchor':'middle','font-family':HD,'font-weight':700,'font-size':34,fill:'#fff'},face);
+ const zoneG=el('g',{transform:`translate(${cx} ${cy+118})`},face);const zR=el('rect',{x:-62,y:-15,width:124,height:26,transform:'skewX(-12)',fill:'#161616'},zoneG);
  const zT=el('text',{y:5,'text-anchor':'middle','font-family':HD,'font-weight':700,'font-size':15,'letter-spacing':3,fill:'#8A8577'},zoneG);
  // tarjetas laterales
  function card(x,y,w,h,label,unit,min,max,hi,lo){
@@ -181,30 +182,35 @@ function Panel(svg,opt={}){
   const l=el('text',{x:14,y:24,'font-family':HD,'font-weight':700,'font-size':14,'letter-spacing':3,fill:'#8A8577'},g);l.textContent=label;
   const v=el('text',{x:14,y:h-30,'font-family':HD,'font-weight':700,'font-size':h>110?58:44,fill:'#fff'},g);
   const u=el('text',{x:w-14,y:h-30,'text-anchor':'end','font-family':BO,'font-weight':600,'font-size':13,fill:'#8A8577'},g);u.textContent=unit;
-  el('rect',{x:14,y:h-18,width:w-28,height:6,fill:'#1E1E1E',transform:'skewX(-20)'},g);const b=el('rect',{x:14,y:h-18,width:0,height:6,fill:st.accent,transform:'skewX(-20)'},g);
+  const bg=el('g',{transform:`translate(16 ${h-18})`},g);
+  el('rect',{width:w-32,height:6,fill:'#1E1E1E',transform:'skewX(-20)'},bg);const b=el('rect',{width:0,height:6,fill:st.accent,transform:'skewX(-20)'},bg);
   return {g,set(val,fmt){const f=clamp((val-min)/(max-min));const bad=(hi!=null&&val>=hi)||(lo!=null&&val<=lo);
-   v.textContent=fmt(val);v.setAttribute('fill',bad?'#FF4D42':'#fff');b.setAttribute('width',(w-28)*f);b.setAttribute('fill',bad?RED:st.accent);return bad}};
+   v.textContent=fmt(val);v.setAttribute('fill',bad?'#FF4D42':'#fff');b.setAttribute('width',(w-32)*f);b.setAttribute('fill',bad?RED:st.accent);return bad}};
  }
  const cw=178;
  const cards={
-  boost:card(30,52,cw,140,'BOOST','PSI',-15,25,21),
-  afr:card(30,206,cw,112,'AFR','ECU',10,18,16,10.8),
-  water:card(W-30-cw,52,cw,140,'AGUA','°C',40,120,105),
-  oil:card(W-30-cw,206,cw,112,'ACEITE','°C',40,140,120),
-  iat:card(30,332,cw,96,'ADMISIÓN','°C',0,80,60),
-  volt:card(W-30-cw,332,cw,96,'BATERÍA','V',10,16,15,12)};
+  boost:card(30,76,cw,132,'BOOST','PSI',-15,25,21),
+  afr:card(30,220,cw,104,'AFR','ECU',10,18,16,10.8),
+  water:card(W-30-cw,76,cw,132,'AGUA','°C',40,120,105),
+  oil:card(W-30-cw,220,cw,104,'ACEITE','°C',40,140,120),
+  iat:card(30,336,cw,96,'ADMISIÓN','°C',0,80,60),
+  volt:card(W-30-cw,336,cw,96,'BATERÍA','V',10,16,15,12)};
  const brand=el('text',{x:cx,y:H-14,'text-anchor':'middle','font-family':HD,'font-weight':800,'font-size':16,'letter-spacing':6,fill:'#6f6a60'},face);
  brand.innerHTML=`<tspan fill="${st.accent}">BB</tspan> GAUGES`;
- const boot=bootLayer(L,cx,226,1.05,st.accent,opt);
+ const boot=bootLayer(L,cx,250,1.0,st.accent,opt);
  function layout(){const c=st.compact;['afr','oil','iat','volt'].forEach(k=>cards[k].g.style.display=c?'none':'');
-  cards.boost.g.setAttribute('transform',`translate(30 ${c?110:52})`);cards.water.g.setAttribute('transform',`translate(${W-30-cw} ${c?110:52})`)}
+  cards.boost.g.setAttribute('transform',`translate(30 ${c?150:76})`);cards.water.g.setAttribute('transform',`translate(${W-30-cw} ${c?150:76})`)}
  layout();
  function set(s){
   const z=s.rpm>=st.red?'r':s.rpm>=st.green?'g':'n';st.zone=z;
   const col=z==='r'?RED:z==='g'?GREEN:st.accent;
   rf.setAttribute('stroke',col);rf.setAttribute('stroke-dasharray',`${fr(s.rpm)*ARC2} ${C2}`);rf.style.filter=`drop-shadow(0 0 8px ${col})`;
   const lit=Math.round(fr(s.rpm)*N);const blink=z==='r'&&(Math.floor(performance.now()/90)%2);
-  ledEls.forEach((r,i)=>{const v=(i+.5)/N*7000;let c='#1a1a1a';if(i<lit)c=v>=6500?RED:v>=6000?GREEN:(i<N*.55?st.accent:'#EDE6D6');if(z==='r')c=blink?'#300':RED;if(z==='g'&&i<lit)c=GREEN;r.setAttribute('fill',c);r.style.filter=i<lit&&!blink?`drop-shadow(0 0 4px ${c})`:''});
+  ledEls.forEach((r,i)=>{const v=(i+.5)/N*7000,zg=v>=6000&&v<6500,zr=v>=6500;
+   let c=zr?'#3A0D0A':zg?'#0D3019':'#1d1d1d',on=i<lit;
+   if(on)c=zr?RED:zg?GREEN:'#EDE6D6';
+   if(z==='g'&&on)c=GREEN;if(z==='r'){c=blink?'#2a0806':RED;on=!blink}
+   r.setAttribute('fill',c);r.style.filter=on?`drop-shadow(0 0 4px ${c})`:''});
   gear.textContent=s.gear;gear.setAttribute('fill',z==='r'?'#FF4D42':z==='g'?GREEN:'#fff');
   rpmT.innerHTML=`${Math.round(s.rpm).toLocaleString('en-US')} <tspan font-size="14" fill="#8A8577" font-family="${BO}">RPM</tspan>`;
   zT.textContent=z==='r'?'TE PASASTE':z==='g'?'CAMBIA YA':'NORMAL';zR.setAttribute('fill',z==='r'?RED:z==='g'?GREEN:'#161616');zT.setAttribute('fill',z==='r'?'#fff':z==='g'?'#06140B':'#8A8577');
