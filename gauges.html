@@ -244,7 +244,7 @@ if(document.readyState==='complete')done();else addEventListener('load',done);se
  <form id="of" novalidate>
   <div class="row">
    <label>Modelo<select id="f-model" required></select></label>
-   <label>Color de acento<select id="f-color"><option>Rojo</option><option>Naranja</option><option>Azul</option><option>Turquesa</option><option>Hueso</option></select></label>
+   <label>Color de acento<select id="f-color"><option>Rojo</option><option>Naranja</option><option>Azul</option><option>Turquesa</option><option>Lila</option><option>Hueso</option></select></label>
   </div>
   <div class="row">
    <label>Nombre<input id="f-name" autocomplete="name" required maxlength="80"><span class="err" id="e-name"></span></label>
@@ -288,7 +288,7 @@ const G={
 };
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const COLS=[["Rojo","#E10600"],["Naranja","#FF7A00"],["Azul","#2F7BFF"],["Turquesa","#1FB8A6"],["Hueso","#EDE6D6"]];
+const COLS=[["Rojo","#E10600"],["Naranja","#FF7A00"],["Azul","#2F7BFF"],["Turquesa","#1FB8A6"],["Lila","#B57BFF"],["Hueso","#EDE6D6"]];
 
 BBContent.load(G,'gauges').then(()=>{
  $("#yr").textContent=new Date().getFullYear();
