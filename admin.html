@@ -286,7 +286,7 @@ async function boot(session){
      fields:[{k:'title',label:'Título'},{k:'url',label:'Video',t:'video'},{k:'poster',label:'Foto de portada (opcional)',t:'img'}],blank:{title:'',url:'',poster:''}}),
    'g-faq':()=>listEditor(V,{doc:'gauges',key:'faq',title:'BB Gauges · Preguntas frecuentes',fields:[{k:'q',label:'Pregunta',wide:true},{k:'a',label:'Respuesta',t:'area',wide:true}],
      toItem:x=>({q:x[0],a:x[1]}),fromItem:x=>[x.q,x.a],blank:['','']}),
-   'g-textos':()=>textsEditor(V,'gauges',{heroEyebrow:'Frase pequeña',heroLead:'Texto de portada',modelsTitle:'Modelos · título',modelsText:'Modelos · texto',readsTitle:'Datos · título',readsText:'Datos · texto',installTitle:'Instalación · título',videosTitle:'Videos · título',faqTitle:'FAQ · título',orderTitle:'Reserva · título',orderText:'Reserva · texto'},'BB Gauges · Textos'),
+   'g-textos':()=>textsEditor(V,'gauges',{heroEyebrow:'Frase pequeña',heroLead:'Texto de portada',modelsTitle:'Modelos · título',modelsText:'Modelos · texto',readsTitle:'Datos · título',readsText:'Datos · texto',installTitle:'Instalación · título',videosTitle:'Videos · título',faqTitle:'FAQ · título',orderTitle:'Pedidos · título',orderText:'Pedidos · texto'},'BB Gauges · Textos'),
    reservas:()=>ordersView(V)
   };
   const tabs=[...document.querySelectorAll('.tabs button')];
