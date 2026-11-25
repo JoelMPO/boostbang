@@ -43,7 +43,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(6,6,6,.92);backdrop-filt
 .hero{position:relative;padding:clamp(40px,6vw,80px) 0 clamp(60px,8vw,110px);overflow:hidden;
  background:radial-gradient(ellipse 60% 70% at 72% 45%,#3a0707 0,rgba(11,11,11,0) 70%),repeating-linear-gradient(45deg,rgba(255,255,255,.018) 0 3px,transparent 3px 9px),var(--bg)}
 .hero::before,.hero::after{content:"";position:absolute;height:6px;width:340px;background:var(--y);transform:skewX(-30deg);opacity:.85}
-.hero::before{left:-60px;top:70px}.hero::after{right:-60px;bottom:60px}
+.hero::before{left:-60px;top:70px}@media(max-width:900px){.hero::before{top:18px;width:200px}}.hero::after{right:-60px;bottom:60px}
 .hgrid{display:grid;grid-template-columns:1fr 1fr;gap:clamp(30px,5vw,70px);align-items:center}
 .hero h1{font-size:clamp(64px,10vw,150px)}
 .hero h1 b{color:var(--y)}
@@ -146,6 +146,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 </style>
+<link rel="stylesheet" href="assets/css/fx.css">
 </head>
 <body>
 <header><div class="wrap bar">
@@ -167,7 +168,7 @@ footer .wrap{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px}
   <p class="hint" id="hint">Desliza el gauge · mantén el botón para acelerar</p>
   <div class="ctrl">
    <button class="ib" id="prev" type="button" aria-label="Medidor anterior">‹</button>
-   <button class="btn gas" id="gas" type="button" aria-pressed="false">Mantén para acelerar</button>
+   <button class="btn gas" id="gas" type="button" aria-pressed="false">Acelerar</button>
    <button class="ib" id="next" type="button" aria-label="Medidor siguiente">›</button>
   </div>
   <div class="sw" id="sw" role="group" aria-label="Color del gauge"></div>
@@ -350,5 +351,6 @@ BBContent.load(G,'gauges').then(()=>{
  $$(".reveal").forEach(x=>io.observe(x));
 });
 </script>
+<script src="assets/js/fx.js" data-wa="50769502405" defer></script>
 </body>
 </html>
