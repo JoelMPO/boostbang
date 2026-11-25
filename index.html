@@ -449,7 +449,7 @@ if(document.readyState==='complete')done();else addEventListener('load',done);se
   <ul class="facts" id="facts"></ul>
   <div class="prods" id="prods"></div>
   <div id="prods-more"></div>
-  <div class="ly"><h3 class="sh sh2">Los Yectos</h3><div class="prods" id="prods-ly"></div></div>
+  <div class="ly" id="ly-sec"><h3 class="sh sh2">Los Yectos</h3><div class="prods" id="prods-ly"></div></div>
   <div class="ly" id="kc"></div>
  </div>
  <div class="setup" id="wa-setup" hidden>Falta configurar: agrega el número de WhatsApp en CONFIG.whatsapp (código de país, solo dígitos) para activar los pedidos.</div>
@@ -734,6 +734,7 @@ const secOf=p=>p.group||(p.type&&p.type!=="Camiseta"?PL[p.type]||p.type:"");
 const card=(p,i)=>`<article class="prod${p.wide?" wide":""}" data-i="${i}">${p.badge?`<span class="pbadge">${esc(p.badge)}</span>`:""}${pic(p.img,p.alt,"Foto del producto",true,p.pos)}<div class="in"><h3>${esc(p.name)}</h3>${p.options?`<p class="opts">${esc(p.options)}</p>`:""}<div class="pr"><span class="price">${money(p.price??SH.price)}</span><span class="gift">${esc(SH.gift)}</span></div><fieldset class="colors"><legend>Color: <b class="cname">${esc(p.color||SH.colors[0].name)}</b></legend><div class="cols">${SH.colors.map(c=>`<label data-name="${esc(c.name)}"><input type="radio" name="cl${i}" value="${esc(c.name)}" aria-label="${esc(c.name)}"${c.name===(p.color||SH.colors[0].name)?" checked":""}><i style="background:${c.css}"></i></label>`).join("")}</div></fieldset><fieldset class="sizes"><legend>${szOf(p).length===1?"Talla":"Elige tu talla (unisex)"}</legend><div class="szrow"><div class="szs">${szOf(p).map(z=>`<label><input type="radio" name="sz${i}" value="${esc(z)}"><span>${esc(z)}</span></label>`).join("")}</div><div class="tlabel" aria-hidden="true"><img src="${IMG.logoSm}" alt=""><div class="tbox"><b class="tsz">–</b><span>Talla<br>unisex</span></div><small>boostbangpa</small></div></div></fieldset><a class="btn order" href="#camisetas" aria-disabled="true">Elige tu talla</a><p class="hint" role="status"></p></div></article>`;
 $("#prods").innerHTML=CONFIG.products.map((p,i)=>secOf(p)?"":card(p,i)).join("");
 $("#prods-ly").innerHTML=CONFIG.products.map((p,i)=>secOf(p)==="Los Yectos"?card(p,i):"").join("");
+$("#ly-sec").hidden=!$("#prods-ly").children.length;
 {const secs=[...new Set(CONFIG.products.map(secOf).filter(x=>x&&x!=="Los Yectos"))];
  $("#prods-more").innerHTML=secs.map(n=>`<div class="ly"><h3 class="sh sh2">${esc(n)}</h3><div class="prods">${CONFIG.products.map((p,i)=>secOf(p)===n?card(p,i):"").join("")}</div></div>`).join("");}
 

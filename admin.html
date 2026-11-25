@@ -130,6 +130,25 @@ async function upload(file,folder){
 }
 
 
+/* ---------- marca de agua para el catálogo de diseños ---------- */
+async function watermark(file,code){
+  const img=await createImageBitmap(file);const W=720,k=W/img.width,H=Math.round(img.height*k),BAR=56;
+  const c=document.createElement('canvas');c.width=W;c.height=H+BAR;const x=c.getContext('2d');
+  x.drawImage(img,0,0,W,H);
+  x.save();x.beginPath();x.rect(0,0,W,H);x.clip();x.translate(W/2,H/2);x.rotate(20*Math.PI/180);
+  x.font='700 34px "Arial Black", Impact, system-ui, sans-serif';x.textAlign='center';x.textBaseline='middle';
+  x.fillStyle='rgba(255,255,255,.24)';x.strokeStyle='rgba(0,0,0,.10)';x.lineWidth=1;
+  const RN=Math.ceil((H+W)/330)+2;for(let r=-RN,row=0;r<=RN;r++,row++)for(let q=-4;q<=4;q++){const tx=q*330+(row%2?165:0),ty=r*165;x.fillText('BOOSTBANG',tx,ty);x.strokeText('BOOSTBANG',tx,ty)}
+  x.restore();
+  x.fillStyle='#000';x.fillRect(0,H,W,BAR);
+  x.font='700 34px "Arial Black", Impact, system-ui, sans-serif';x.textBaseline='middle';x.textAlign='left';x.fillStyle='#E10600';x.fillText(code,18,H+BAR/2+1);
+  const blob=await new Promise(r=>c.toBlob(r,'image/webp',.85));
+  return new File([blob],code+'.webp',{type:'image/webp'});
+}
+function nextCodes(list,n){let m=0;(list||[]).forEach(d=>{const v=parseInt(String(d.code||'').replace(/\D/g,''),10);if(v>m)m=v});
+  return Array.from({length:n},(_,i)=>'BB-'+String(m+1+i).padStart(4,'0'))}
+const nameFrom=f=>f.name.replace(/\.\w+$/,'').replace(/[-_]+/g,' ').replace(/\s+/g,' ').trim();
+
 /* ---------- fotos y videos de un proyecto: agregar, quitar, ordenar y elegir la principal ---------- */
 const isVid=u=>/\.(mp4|webm|mov|m4v)(\?|$)/i.test(u||'');
 function mediaMgr(box,it,key,onChange,folder){
@@ -175,11 +194,11 @@ function fieldHTML(f,v,key){
    default:return `<label${w}>${L}<input data-k="${key}" value="${esc(v)}"></label>`;
   }
 }
-function listEditor(host,{doc,key,fields,title,help,thumb,folder,blank,toItem,fromItem,addLabel}){
+function listEditor(host,{doc,key,fields,title,help,thumb,folder,blank,toItem,fromItem,addLabel,transform,extraAdds}){
   toItem=toItem||(x=>x);fromItem=fromItem||(x=>x);
   const arr=()=>D[doc][key]||(D[doc][key]=[]);
   function draw(){
-    host.innerHTML=`<h1>${esc(title)}</h1>${help?`<p class="mu">${help}</p>`:''}<div class="row"><button class="btn" data-add>${addLabel||'+ Agregar'}</button></div><div data-list></div>`;
+    host.innerHTML=`<h1>${esc(title)}</h1>${help?`<p class="mu">${help}</p>`:''}<div class="row"><button class="btn" data-add>${addLabel||'+ Agregar'}</button>${(extraAdds||[]).map((x,j)=>`<button class="btn g" data-xadd="${j}">${esc(x.label)}</button>`).join('')}</div><div data-list></div>`;
     const list=host.querySelector('[data-list]');
     arr().forEach((raw,i)=>{const it=toItem(raw);const el=document.createElement('div');el.className='item';
       const th=thumb&&it[thumb]&&!isVid(it[thumb])?it[thumb]:null;
@@ -195,13 +214,15 @@ function listEditor(host,{doc,key,fields,title,help,thumb,folder,blank,toItem,fr
         it[k]=v;commit();if(k===thumb){const im=el.querySelector('.thumb');if(im&&im.tagName==='IMG')im.src=v}}));
       el.querySelectorAll('[data-up]').forEach(inp=>inp.addEventListener('change',async()=>{const file=inp.files[0];if(!file)return;const k=inp.dataset.up;
         const lab=inp.parentElement;lab.firstChild.textContent='Subiendo…';
-        try{const url=await upload(file,folder||key);it[k]=url;commit();draw();toast('Archivo subido')}catch(e){toast('No se pudo subir: '+e.message,true);lab.firstChild.textContent='Reintentar'}}));
+        try{const src=transform?await transform(file,it):file;const url=await upload(src,folder||key);it[k]=url;commit();draw();toast('Archivo subido')}catch(e){toast('No se pudo subir: '+e.message,true);lab.firstChild.textContent='Reintentar'}}));
       el.querySelector('[data-del]').onclick=()=>{if(!confirmDel(el))return;arr().splice(i,1);markDirty(doc);draw()};
       el.querySelectorAll('[data-mv]').forEach(b=>b.onclick=()=>{const j=i+Number(b.dataset.mv);if(j<0||j>=arr().length)return;const a=arr();[a[i],a[j]]=[a[j],a[i]];markDirty(doc);draw()});
       list.append(el)});
     host.querySelector('[data-add]').onclick=()=>{arr().unshift(fromItem(structuredClone(blank)));markDirty(doc);draw()};
+    host.querySelectorAll('[data-xadd]').forEach(b=>b.onclick=()=>{arr().unshift(fromItem(structuredClone(extraAdds[+b.dataset.xadd].blank)));markDirty(doc);draw()});
   }
   draw();
+  return draw;
 }
 function confirmDel(el){if(el.dataset.arm){return true}el.dataset.arm=1;const b=el.querySelector('[data-del]');b.textContent='¿Seguro? Toca otra vez';b.style.borderColor='#E10600';setTimeout(()=>{delete el.dataset.arm;b.textContent='Eliminar';b.style.borderColor=''},3000);return false}
 
@@ -264,11 +285,25 @@ async function boot(session){
      toItem:b=>({...b,media:[...(b.img?[{img:b.img,pos:b.pos||'50% 50%',alt:b.alt||b.name}]:[]),...(b.extra||[]).map(x=>typeof x==='string'?{img:x,pos:'50% 50%',alt:b.name}:x)]}),
      fromItem:it=>{const o={...it};const m=it.media||[];const f=m[0]||{};o.img=f.img||'';o.pos=f.pos||'50% 50%';o.alt=f.alt||it.name||'';o.extra=m.slice(1);delete o.media;return o},
      blank:{name:'',makeModel:'',img:'',pos:'50% 50%',alt:'',desc:'',mods:[],extra:[],ig:'',tt:'',yt:''}}),
-   camisetas:()=>listEditor(V,{doc:'site',key:'products',title:'Prendas',addLabel:'+ Nueva prenda',help:'Agrega camisetas, hoodies, gorras o lo que quieras vender. Cada tipo que no sea camiseta sale en su propia sección del sitio (por ejemplo "Hoodies"). Si dejas el precio vacío se usa el precio general; si dejas las tallas vacías se usan las tallas generales (gorras y accesorios salen como talla única). La etiqueta sale como cinta sobre la foto (ej: Nuevo, Edición limitada, Agotado). Después de agregar o editar, toca Guardar arriba.',thumb:'img',
-     fields:[{k:'type',label:'Tipo de prenda',t:'sel',opts:['Camiseta','Hoodie','Sudadera','Tank top','Gorra','Accesorio','Otro']},{k:'name',label:'Nombre'},{k:'price',label:'Precio (opcional)',t:'num'},{k:'badge',label:'Etiqueta (opcional)'},{k:'img',label:'Foto',t:'img'},{k:'options',label:'Detalle (ej: Estampado en frente y espalda)'},{k:'color',label:'Color fijo (opcional)'},{k:'group',label:'Sección propia (opcional, ej: Los Yectos)'},{k:'sizes',label:'Tallas (opcional, una por línea)',t:'lines'},{k:'alt',label:'Descripción de la foto',wide:true}],
+   camisetas:()=>listEditor(V,{doc:'site',key:'products',title:'Prendas',addLabel:'+ Nueva prenda',help:'Agrega camisetas, hoodies, gorras o lo que quieras vender. Cada tipo que no sea camiseta sale en su propia sección del sitio (por ejemplo "Hoodies"). Para la colaboración con Los Yectos usa el botón "+ Nueva prenda Los Yectos" o elige "Colab · Los Yectos" en ¿Dónde aparece?: sale en ese apartado, con el mismo formato. Si dejas el precio vacío se usa el precio general; si dejas las tallas vacías se usan las tallas generales (gorras y accesorios salen como talla única). La etiqueta sale como cinta sobre la foto (ej: Nuevo, Edición limitada, Agotado). Después de agregar o editar, toca Guardar arriba.',thumb:'img',
+     fields:[{k:'type',label:'Tipo de prenda',t:'sel',opts:['Camiseta','Hoodie','Sudadera','Tank top','Gorra','Accesorio','Otro']},{k:'name',label:'Nombre'},{k:'price',label:'Precio (opcional)',t:'num'},{k:'badge',label:'Etiqueta (opcional)'},{k:'img',label:'Foto',t:'img'},{k:'options',label:'Detalle (ej: Estampado en frente y espalda)'},{k:'color',label:'Color fijo (opcional)'},{k:'where',label:'¿Dónde aparece?',t:'sel',opts:['Tienda BoostBang','Colab · Los Yectos']},{k:'sizes',label:'Tallas (opcional, una por línea)',t:'lines'},{k:'alt',label:'Descripción de la foto',wide:true}],
+     toItem:p=>({...p,where:p.group==='Los Yectos'?'Colab · Los Yectos':'Tienda BoostBang'}),
+     fromItem:it=>{const o={...it};const w=it.where;delete o.where;if(w==='Colab · Los Yectos')o.group='Los Yectos';else if(o.group==='Los Yectos'||w==='Tienda BoostBang'&&o.group==='Los Yectos')o.group='';if(!o.group)delete o.group;return o},
+     extraAdds:[{label:'+ Nueva prenda Los Yectos',blank:{type:'Camiseta',name:'',img:'',alt:'',options:'Estampado en frente y espalda',badge:'Colab',group:'Los Yectos'}}],
      blank:{type:'Camiseta',name:'',img:'',alt:'',options:'Estampado en frente y espalda',badge:'Nuevo'}}),
-   disenos:()=>listEditor(V,{doc:'site',key:'designs',title:'Catálogo de diseños',help:'Las fotos que subas aquí se comprimen. Para que no se puedan aprovechar, súbelas con marca de agua o en baja resolución.',thumb:'img',folder:'designs',
-     fields:[{k:'code',label:'Código'},{k:'name',label:'Nombre'},{k:'make',label:'Marca (para el filtro)'},{k:'img',label:'Imagen',t:'img'}],blank:{code:'BB-',name:'',make:'',img:''}}),
+   disenos:()=>{V.innerHTML=`<div class="card" style="margin-bottom:22px"><h1 style="margin-top:0">Subir diseños nuevos</h1>
+      <p class="mu">Elige una o varias imágenes. A cada una se le pone sola la marca de agua BOOSTBANG y su código BB (el siguiente número libre), se achica y queda primera en el catálogo. Después revisa el nombre y la marca de cada una y toca <b>Guardar</b>.</p>
+      <label class="btn" style="display:inline-block;cursor:pointer"><span>+ Elegir imágenes</span><input type="file" accept="image/*" multiple hidden id="dz-in"></label> <span class="mu" id="dz-st"></span></div><div id="dz-list"></div>`;
+     const redraw=listEditor(V.querySelector('#dz-list'),{doc:'site',key:'designs',title:'Catálogo de diseños',help:'El primero de la lista sale primero en el carrusel; usa ↑ ↓ para ordenar. Si cambias la imagen de un diseño, se le pone la marca de agua con su código: cambia el código antes de subir la imagen si quieres otro.',thumb:'img',folder:'designs',
+       transform:(f,it)=>watermark(f,it.code&&it.code!=='BB-'?it.code:nextCodes(D.site.designs,1)[0]),
+       fields:[{k:'code',label:'Código'},{k:'name',label:'Nombre'},{k:'make',label:'Marca (para el filtro)'},{k:'img',label:'Imagen (se le pone marca de agua)',t:'img'}],blank:{code:'',name:'',make:'',img:''}});
+     V.querySelector('#dz-in').onchange=async e=>{const files=[...e.target.files];if(!files.length)return;const st=V.querySelector('#dz-st');
+       const list=D.site.designs||(D.site.designs=[]);let ok=0;
+       for(const [i,f] of files.entries()){st.textContent=`Procesando ${i+1} de ${files.length}…`;
+         try{const code=nextCodes(list,1)[0];const url=await upload(await watermark(f,code),'designs');list.unshift({code,name:nameFrom(f),make:'',img:url});ok++}
+         catch(err){toast('No se pudo subir '+f.name+': '+err.message,true)}}
+       e.target.value='';st.textContent='';if(ok){markDirty('site');redraw();toast(`${ok} diseño(s) listos con marca de agua. Toca Guardar`)}};
+   },
    otros:()=>{V.innerHTML='<div id="a"></div><div id="b"></div>';
      objEditor(V.querySelector('#a'),'site','shirt',[{k:'price',label:'Precio general de camiseta',t:'num'},{k:'gift',label:'Regalo incluido'},{k:'sizes',label:'Tallas (una por línea)',t:'lines'}],'Camisetas: precio y tallas');
      objEditor(V.querySelector('#b'),'site','keychain',[{k:'price',label:'Precio llaveros',t:'num'},{k:'desc',label:'Descripción',t:'area',wide:true},{k:'msg',label:'Mensaje de WhatsApp',t:'area',wide:true}],'Llaveros')},
