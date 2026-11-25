@@ -142,6 +142,23 @@ nav a:hover,nav a.on{border-color:var(--y)}
 .thumbs .pic{width:84px;aspect-ratio:1}
 .demo{display:inline-block;font:600 12px var(--bo);letter-spacing:.14em;text-transform:uppercase;border:1px dashed var(--mu);color:var(--mu);padding:3px 8px;margin-bottom:14px}
 @media(max-width:860px){.build{display:flex;flex-direction:column;align-items:stretch}.build .txt{order:2}}
+.bnum{display:flex;align-items:center;gap:12px;font:700 13px var(--hd);letter-spacing:.28em;text-transform:uppercase;color:var(--mu);margin:0 0 14px}
+.bnum::after{content:"";flex:1;height:1px;background:linear-gradient(90deg,var(--y),transparent);max-width:120px}
+.build .txt{position:relative;padding-left:22px;border-left:2px solid var(--bd);transition:border-color .3s}
+.build:hover .txt{border-left-color:var(--y)}
+.specs li{position:relative;padding-left:18px}.specs li::before{content:"";position:absolute;left:0;top:50%;width:8px;height:2px;background:var(--y)}
+.bsoc{display:flex;flex-wrap:wrap;gap:10px;margin-top:22px}
+.bs{display:inline-flex;align-items:center;gap:8px;padding:11px 16px;border:1px solid var(--bd);color:var(--tx);text-decoration:none;font:700 15px var(--hd);letter-spacing:.1em;text-transform:uppercase;transition:all .2s}
+.bs svg{width:18px;height:18px;fill:currentColor}
+.bs:hover{transform:translateY(-2px)}
+.bs-ig:hover{border-color:#E1306C;color:#fff;background:linear-gradient(45deg,#F58529,#DD2A7B,#8134AF)}
+.bs-tt:hover{border-color:#25F4EE;color:#fff;background:#111;box-shadow:-3px 0 0 #25F4EE,3px 0 0 #FE2C55}
+.bs-yt:hover{border-color:#FF0000;color:#fff;background:#FF0000}
+.cslide video{width:100%;height:100%;object-fit:cover;display:block}
+.cthumbs button{position:relative}.cthumbs video{width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.vplay{position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-style:normal;font-size:18px;text-shadow:0 1px 6px #000;pointer-events:none}
+@media(max-width:860px){.build .txt{padding-left:16px}}
+
 /* merch */
 #merch{background:var(--deep);border-top:1px solid var(--bd)}
 .prods{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;margin-top:40px}
@@ -687,8 +704,14 @@ let tx=0;lb.addEventListener("touchstart",e=>tx=e.touches[0].clientX,{passive:tr
 lb.addEventListener("touchend",e=>{const d=e.changedTouches[0].clientX-tx;if(Math.abs(d)>60)step(d<0?1:-1)},{passive:true});
 /* builds */
 const slidesOf=b=>[{img:b.img,pos:b.pos,alt:b.alt},...(b.extra||[]).map(x=>typeof x==="string"?{img:x,alt:b.name}:x)];
+const isVid=u=>/\.(mp4|webm|mov|m4v)(\?|$)/i.test(u||"");
+const media=(x,alt,lazy,thumb)=>!x.img?(thumb?"":`<div class="ph" role="img" aria-label="${esc(alt)} (marcador)">Foto del proyecto</div>`)
+ :isVid(x.img)?`<video src="${esc(x.img)}" ${thumb?'preload="metadata"':'autoplay'} muted loop playsinline ${x.pos?`style="object-position:${x.pos}"`:""} aria-label="${esc(alt)}"></video>${thumb?'<i class="vplay" aria-hidden="true">▶</i>':''}`
+ :`<img src="${esc(x.img)}" alt="${thumb?"":esc(alt)}" ${lazy?'loading="lazy"':''} ${x.pos?`style="object-position:${x.pos}"`:""} decoding="async">`;
+const SOC=[["ig","Instagram","M7 2h10a5 5 0 015 5v10a5 5 0 01-5 5H7a5 5 0 01-5-5V7a5 5 0 015-5zm5 5.5a4.5 4.5 0 100 9 4.5 4.5 0 000-9zm5.3-1.6a1.2 1.2 0 100 2.4 1.2 1.2 0 000-2.4zM12 9.3a2.7 2.7 0 110 5.4 2.7 2.7 0 010-5.4z"],["tt","TikTok","M16.6 2c.4 2.6 2 4.2 4.4 4.4v3.3a8 8 0 01-4.3-1.3v6.8a6.7 6.7 0 11-6.7-6.7h.6v3.4a3.3 3.3 0 103 3.3V2z"],["yt","YouTube","M23 7.2a3 3 0 00-2.1-2.1C19 4.6 12 4.6 12 4.6s-7 0-8.9.5A3 3 0 001 7.2 31 31 0 00.5 12 31 31 0 001 16.8a3 3 0 002.1 2.1c1.9.5 8.9.5 8.9.5s7 0 8.9-.5a3 3 0 002.1-2.1 31 31 0 00.5-4.8 31 31 0 00-.5-4.8zM9.8 15.1V8.9l5.8 3.1z"]];
+const socBtns=b=>{const l=SOC.filter(([k])=>b[k]);return l.length?`<div class="bsoc">${l.map(([k,n,d])=>`<a class="bs bs-${k}" href="${esc(b[k])}" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${d}"/></svg>Ver en ${n}</a>`).join("")}</div>`:""};
 $("#build-list").innerHTML=CONFIG.builds.map((b,bi)=>{const sl=slidesOf(b),multi=sl.length>1;
- return `<article class="build"><div class="car" data-i="${bi}" role="group" aria-roledescription="carrusel" aria-label="Fotos de ${esc(b.name)}"><div class="cview"><div class="ctrack" ${multi?'tabindex="0"':''}>${sl.map((x,k)=>`<figure class="cslide" ${multi?`aria-label="Foto ${k+1} de ${sl.length}"`:""}>${x.img?`<img src="${esc(x.img)}" alt="${esc(x.alt||b.name)}" ${k?'loading="lazy"':''} ${x.pos?`style="object-position:${x.pos}"`:""} decoding="async">`:`<div class="ph" role="img" aria-label="${esc(x.alt||b.name)} (marcador)">Foto del proyecto</div>`}</figure>`).join("")}</div>${multi?`<button type="button" class="cbtn prev" aria-label="Foto anterior">‹</button><button type="button" class="cbtn next" aria-label="Foto siguiente">›</button><span class="ccount" aria-live="polite">1 / ${sl.length}</span>`:""}</div>${multi?`<div class="cthumbs">${sl.map((x,k)=>`<button type="button" aria-label="Ver foto ${k+1}" ${k?"":'aria-current="true"'}>${x.img?`<img src="${esc(x.img)}" alt="" loading="lazy" ${x.pos?`style="object-position:${x.pos}"`:""}>`:""}</button>`).join("")}</div>`:""}</div><div class="txt">${b.demo?'<span class="demo">Contenido de ejemplo</span>':''}<p class="make">${esc(b.makeModel)}</p><h3>${esc(b.name)}</h3><p>${esc(b.desc)}</p>${b.mods&&b.mods.length?`<ul class="specs">${b.mods.map(m=>`<li>${esc(m)}</li>`).join("")}</ul>`:""}</div></article>`}).join("");
+ return `<article class="build"><div class="car" data-i="${bi}" role="group" aria-roledescription="carrusel" aria-label="Fotos de ${esc(b.name)}"><div class="cview"><div class="ctrack" ${multi?'tabindex="0"':''}>${sl.map((x,k)=>`<figure class="cslide" ${multi?`aria-label="Foto ${k+1} de ${sl.length}"`:""}>${media(x,x.alt||b.name,k>0)}</figure>`).join("")}</div>${multi?`<button type="button" class="cbtn prev" aria-label="Foto anterior">‹</button><button type="button" class="cbtn next" aria-label="Foto siguiente">›</button><span class="ccount" aria-live="polite">1 / ${sl.length}</span>`:""}</div>${multi?`<div class="cthumbs">${sl.map((x,k)=>`<button type="button" aria-label="Ver foto ${k+1}" ${k?"":'aria-current="true"'}>${media(x,"",true,true)}</button>`).join("")}</div>`:""}</div><div class="txt"><p class="bnum">Proyecto ${String(bi+1).padStart(2,"0")}</p>${b.demo?'<span class="demo">Contenido de ejemplo</span>':''}<p class="make">${esc(b.makeModel)}</p><h3>${esc(b.name)}</h3><p>${esc(b.desc)}</p>${b.mods&&b.mods.length?`<ul class="specs">${b.mods.map(m=>`<li>${esc(m)}</li>`).join("")}</ul>`:""}${socBtns(b)}</div></article>`}).join("");
 /* carrusel de proyectos: deslizar, flechas, teclado o miniaturas; la miniatura activa lleva marco rojo */
 const initCar=car=>{
   const tr=$(".ctrack",car),th=$$(".cthumbs button",car),n=th.length;if(n<2)return;

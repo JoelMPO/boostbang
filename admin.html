@@ -38,6 +38,19 @@ textarea{min-height:70px;resize:vertical}
 input:focus,select:focus,textarea:focus{outline:2px solid var(--y);border-color:var(--y)}
 .row{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-top:8px}
 .imgf{display:grid;gap:6px}
+.mgr{display:grid;gap:8px}.mgr>span{font-size:13px;color:var(--mu)}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(130px,1fr));gap:10px}
+.mi{position:relative;border:1px solid var(--bd);border-radius:8px;overflow:hidden;background:#000}
+.mi.main{border:2px solid var(--y)}
+.mi img,.mi video{display:block;width:100%;aspect-ratio:4/3;object-fit:cover}
+.mi .tag{position:absolute;top:6px;left:6px;background:var(--y);color:#fff;font:700 11px system-ui;padding:3px 7px;border-radius:4px}
+.mi .vt{position:absolute;top:6px;right:6px;background:rgba(0,0,0,.7);color:#fff;font:700 11px system-ui;padding:3px 7px;border-radius:4px}
+.mi .mb{display:flex;gap:2px;padding:4px;background:#111;flex-wrap:wrap}
+.mi .mb button{flex:1;min-width:28px;background:#1d1d1d;color:#ddd;border:1px solid var(--bd);border-radius:5px;padding:6px 0;cursor:pointer;font-size:13px}
+.mi .mb button:hover{border-color:var(--y)}
+.madd{display:grid;place-items:center;aspect-ratio:4/3;border:2px dashed var(--bd);border-radius:8px;color:var(--mu);cursor:pointer;text-align:center;padding:8px;font-size:13px}
+.madd:hover{border-color:var(--y);color:#fff}
+
 .imgf .pv{display:flex;gap:8px;align-items:center}
 .imgf img,.imgf video{width:64px;height:64px;object-fit:cover;border-radius:6px;background:#000;border:1px solid var(--bd)}
 .savebar{position:fixed;left:0;right:0;bottom:0;background:#080808;border-top:1px solid var(--bd);padding:12px 16px;display:flex;gap:10px;align-items:center;justify-content:flex-end;z-index:30}
@@ -116,6 +129,37 @@ async function upload(file,folder){
   return sb.storage.from('media').getPublicUrl(path).data.publicUrl;
 }
 
+
+/* ---------- fotos y videos de un proyecto: agregar, quitar, ordenar y elegir la principal ---------- */
+const isVid=u=>/\.(mp4|webm|mov|m4v)(\?|$)/i.test(u||'');
+function mediaMgr(box,it,key,onChange,folder){
+  const list=()=>it[key]||(it[key]=[]);
+  function draw(){
+    box.querySelectorAll('.mgrid').forEach(n=>n.remove());
+    const g=document.createElement('div');g.className='mgrid';
+    list().forEach((m,i)=>{const d=document.createElement('div');d.className='mi'+(i===0?' main':'');
+      d.innerHTML=`${isVid(m.img)?`<video src="${esc(m.img)}" muted loop autoplay playsinline></video><span class="vt">VIDEO</span>`:`<img src="${esc(m.img)}" alt="">`}${i===0?'<span class="tag">PRINCIPAL</span>':''}
+       <div class="mb">${i?'<button type="button" data-a="main" title="Hacer principal">★</button>':''}<button type="button" data-a="l" title="Mover antes">←</button><button type="button" data-a="r" title="Mover después">→</button><button type="button" data-a="x" title="Eliminar">✕</button></div>`;
+      d.querySelectorAll('[data-a]').forEach(b=>b.onclick=()=>{const a=list(),A=b.dataset.a;
+        if(A==='main'){a.unshift(a.splice(i,1)[0])}
+        else if(A==='l'&&i>0){[a[i-1],a[i]]=[a[i],a[i-1]]}
+        else if(A==='r'&&i<a.length-1){[a[i+1],a[i]]=[a[i],a[i+1]]}
+        else if(A==='x'){if(b.dataset.arm){a.splice(i,1)}else{b.dataset.arm=1;b.textContent='¿Seguro?';b.style.background='#E10600';setTimeout(()=>{delete b.dataset.arm;b.textContent='✕';b.style.background=''},3000);return}}
+        else return;
+        onChange();draw()});
+      g.append(d)});
+    const add=document.createElement('label');add.className='madd';
+    add.innerHTML='<span>+ Agregar fotos, GIF o videos cortos<br><small>Puedes elegir varios a la vez</small></span><input type="file" accept="image/*,video/mp4,video/webm,video/quicktime" multiple hidden>';
+    add.querySelector('input').onchange=async e=>{const files=[...e.target.files];if(!files.length)return;
+      for(const [k,f] of files.entries()){add.firstChild.innerHTML=`Subiendo ${k+1} de ${files.length}…`;
+        if(f.type.startsWith('video/')&&f.size>40e6){toast(`${f.name}: el video pesa más de 40 MB, recórtalo o comprímelo`,true);continue}
+        try{const url=await upload(f,folder);list().push({img:url,pos:'50% 50%',alt:it.name||''});onChange()}catch(err){toast('No se pudo subir '+f.name+': '+err.message,true)}}
+      toast('Listo. Recuerda tocar Guardar');draw()};
+    g.append(add);box.append(g);
+  }
+  draw();
+}
+
 /* ---------- editor genérico de listas ---------- */
 // tipos de campo: text, area, num, sel, img, video, lines, imgs, kv (lista "Clave: Valor")
 function fieldHTML(f,v,key){
@@ -124,6 +168,7 @@ function fieldHTML(f,v,key){
    case 'area':return `<label${w}>${L}<textarea data-k="${key}">${esc(v)}</textarea></label>`;
    case 'lines':return `<label${w}>${L}<textarea data-k="${key}" data-lines>${esc((v||[]).join('\n'))}</textarea></label>`;
    case 'kv':return `<label${w}>${L}<textarea data-k="${key}" data-kv placeholder="Pantalla: 2.1″ redonda">${esc((v||[]).map(x=>x.join(': ')).join('\n'))}</textarea></label>`;
+   case 'media':return `<div class="mgr wide" data-media="${key}"><span>${esc(f.label)}</span></div>`;
    case 'num':return `<label${w}>${L}<input type="number" step="any" data-k="${key}" value="${esc(v)}"></label>`;
    case 'sel':return `<label${w}>${L}<select data-k="${key}">${f.opts.map(o=>`<option ${o===(v||f.opts[0])?'selected':''}>${esc(o)}</option>`).join('')}</select></label>`;
    case 'img':case 'video':return `<div class="imgf${f.wide?' wide':''}"><label>${L}<input data-k="${key}" value="${esc(v)}" placeholder="URL"></label><div class="pv">${v?(f.t==='img'?`<img src="${esc(v)}" alt="">`:`<video src="${esc(v)}" muted></video>`):''}<label class="btn g sm" style="display:inline-block;text-transform:none">Subir ${f.t==='img'?'foto':'video'}<input type="file" accept="${f.t==='img'?'image/*':'video/*'}" data-up="${key}" hidden></label></div></div>`;
@@ -137,11 +182,12 @@ function listEditor(host,{doc,key,fields,title,help,thumb,folder,blank,toItem,fr
     host.innerHTML=`<h1>${esc(title)}</h1>${help?`<p class="mu">${help}</p>`:''}<div class="row"><button class="btn" data-add>${addLabel||'+ Agregar'}</button></div><div data-list></div>`;
     const list=host.querySelector('[data-list]');
     arr().forEach((raw,i)=>{const it=toItem(raw);const el=document.createElement('div');el.className='item';
-      const th=thumb?it[thumb]:null;
+      const th=thumb&&it[thumb]&&!isVid(it[thumb])?it[thumb]:null;
       el.innerHTML=`<div>${th?`<img class="thumb" src="${esc(th)}" alt="">`:`<div class="thumb" style="display:grid;place-items:center;color:#555">#${i+1}</div>`}
        <div class="row"><button class="btn g sm" data-mv="-1" aria-label="Subir">↑</button><button class="btn g sm" data-mv="1" aria-label="Bajar">↓</button><button class="btn g sm" data-del>Eliminar</button></div></div>
        <div class="fields">${fields.map(f=>fieldHTML(f,it[f.k],f.k)).join('')}</div>`;
       const commit=()=>{arr()[i]=fromItem(it);markDirty(doc)};
+      el.querySelectorAll('[data-media]').forEach(box=>mediaMgr(box,it,box.dataset.media,()=>{commit();const th=el.querySelector('.thumb');const m=(it[box.dataset.media]||[])[0];if(th&&th.tagName==='IMG'&&m&&!isVid(m.img))th.src=m.img},folder||key));
       el.querySelectorAll('[data-k]').forEach(inp=>inp.addEventListener('input',()=>{const k=inp.dataset.k;const f=fields.find(x=>x.k===k);
         let v=inp.value;if(inp.hasAttribute('data-lines'))v=v.split('\n').map(s=>s.trim()).filter(Boolean);
         else if(inp.hasAttribute('data-kv'))v=v.split('\n').map(s=>s.split(':')).filter(p=>p[0].trim()).map(p=>[p[0].trim(),p.slice(1).join(':').trim()]);
@@ -213,11 +259,11 @@ async function boot(session){
    galeria:()=>listEditor(V,{doc:'site',key:'gallery',title:'Galería',help:'Forma: land (horizontal), land big (horizontal grande), port (vertical), sq (cuadrada). Para un video, sube el video y también una foto de portada.',thumb:'img',
      fields:[{k:'title',label:'Título'},{k:'cat',label:'Categoría',t:'sel',opts:S.categories},{k:'shape',label:'Forma',t:'sel',opts:shapes},{k:'img',label:'Foto',t:'img'},{k:'video',label:'Video (opcional)',t:'video'},{k:'pos',label:'Enfoque (ej. 50% 50%)'},{k:'alt',label:'Descripción de la foto',wide:true}],
      blank:{cat:S.categories[0],shape:'sq',title:'',img:'',pos:'50% 50%',alt:''}}),
-   proyectos:()=>listEditor(V,{doc:'site',key:'builds',title:'Proyectos',thumb:'img',
-     fields:[{k:'name',label:'Nombre'},{k:'makeModel',label:'Marca · detalle'},{k:'img',label:'Foto principal',t:'img'},{k:'pos',label:'Enfoque'},{k:'alt',label:'Descripción de la foto',wide:true},{k:'desc',label:'Historia',t:'area',wide:true},{k:'mods',label:'Modificaciones (una por línea)',t:'lines',wide:true},{k:'extraUrls',label:'Más fotos (una URL por línea)',t:'lines',wide:true}],
-     toItem:b=>({...b,extraUrls:(b.extra||[]).map(x=>typeof x==='string'?x:x.img)}),
-     fromItem:it=>{const o={...it};o.extra=(it.extraUrls||[]).map(u=>({img:u,pos:'50% 50%',alt:it.name}));delete o.extraUrls;return o},
-     blank:{name:'',makeModel:'',img:'',pos:'50% 50%',alt:'',desc:'',mods:[],extra:[]}}),
+   proyectos:()=>listEditor(V,{doc:'site',key:'builds',title:'Proyectos',addLabel:'+ Nuevo proyecto',help:'El orden aquí es el orden en el sitio: usa ↑ ↓ para mover cada proyecto. En "Fotos y videos" la primera es la principal (marco rojo); con ★ eliges otra como principal y con ← → cambias el orden de las miniaturas. Puedes subir fotos, GIF o videos cortos (MP4, de pocos segundos; se reproducen solos y sin sonido). Los enlaces de Instagram, TikTok y YouTube son opcionales: el botón solo aparece si pones el enlace. Al terminar toca Guardar.',thumb:'img',
+     fields:[{k:'name',label:'Nombre'},{k:'makeModel',label:'Marca · detalle'},{k:'media',label:'Fotos y videos',t:'media',wide:true},{k:'desc',label:'Historia',t:'area',wide:true},{k:'mods',label:'Modificaciones (una por línea)',t:'lines',wide:true},{k:'ig',label:'Enlace al post de Instagram'},{k:'tt',label:'Enlace al video de TikTok'},{k:'yt',label:'Enlace de YouTube'}],
+     toItem:b=>({...b,media:[...(b.img?[{img:b.img,pos:b.pos||'50% 50%',alt:b.alt||b.name}]:[]),...(b.extra||[]).map(x=>typeof x==='string'?{img:x,pos:'50% 50%',alt:b.name}:x)]}),
+     fromItem:it=>{const o={...it};const m=it.media||[];const f=m[0]||{};o.img=f.img||'';o.pos=f.pos||'50% 50%';o.alt=f.alt||it.name||'';o.extra=m.slice(1);delete o.media;return o},
+     blank:{name:'',makeModel:'',img:'',pos:'50% 50%',alt:'',desc:'',mods:[],extra:[],ig:'',tt:'',yt:''}}),
    camisetas:()=>listEditor(V,{doc:'site',key:'products',title:'Prendas',addLabel:'+ Nueva prenda',help:'Agrega camisetas, hoodies, gorras o lo que quieras vender. Cada tipo que no sea camiseta sale en su propia sección del sitio (por ejemplo "Hoodies"). Si dejas el precio vacío se usa el precio general; si dejas las tallas vacías se usan las tallas generales (gorras y accesorios salen como talla única). La etiqueta sale como cinta sobre la foto (ej: Nuevo, Edición limitada, Agotado). Después de agregar o editar, toca Guardar arriba.',thumb:'img',
      fields:[{k:'type',label:'Tipo de prenda',t:'sel',opts:['Camiseta','Hoodie','Sudadera','Tank top','Gorra','Accesorio','Otro']},{k:'name',label:'Nombre'},{k:'price',label:'Precio (opcional)',t:'num'},{k:'badge',label:'Etiqueta (opcional)'},{k:'img',label:'Foto',t:'img'},{k:'options',label:'Detalle (ej: Estampado en frente y espalda)'},{k:'color',label:'Color fijo (opcional)'},{k:'group',label:'Sección propia (opcional, ej: Los Yectos)'},{k:'sizes',label:'Tallas (opcional, una por línea)',t:'lines'},{k:'alt',label:'Descripción de la foto',wide:true}],
      blank:{type:'Camiseta',name:'',img:'',alt:'',options:'Estampado en frente y espalda',badge:'Nuevo'}}),
