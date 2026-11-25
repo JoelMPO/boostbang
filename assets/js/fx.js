@@ -55,7 +55,12 @@ document.addEventListener('click',e=>{const a=e.target.closest('a[href*="wa.me"]
 /* flecha en los botones principales */
 function arrows(){$$('.ctas .btn:not(.ghost),.bbg-copy .btn:not(.ghost)').forEach(b=>b.classList.add('fx-arrow'))}
 
-function init(){floats();arrows();arm();onScroll();
+/* inclinación 3D con el mouse */
+function tilt(){if(RM||matchMedia('(hover: none)').matches)return;
+  document.addEventListener('pointermove',e=>{const t=e.target.closest('[data-tilt]');if(!t)return;const r=t.getBoundingClientRect();
+    const x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;t.style.transform=`perspective(900px) rotateY(${x*10}deg) rotateX(${-y*10}deg)`});
+  document.addEventListener('pointerout',e=>{const t=e.target.closest&&e.target.closest('[data-tilt]');if(t&&!t.contains(e.relatedTarget))t.style.transform=''})}
+function init(){floats();arrows();arm();onScroll();tilt();
   mo.observe(document.body,{childList:true,subtree:true});
   $$('.tab').forEach(t=>tabObs.observe(t,{attributes:true,attributeFilter:['hidden']}));
   setTimeout(heroWords,60)}
