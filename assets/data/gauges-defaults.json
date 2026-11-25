@@ -4,7 +4,7 @@
   "heroEyebrow": "BoostBang · OBD-II · Plug & play",
   "heroLead": "El gauge digital que lee la computadora de tu carro: RPM con luz de cambio, boost, AFR y temperaturas. Al encender, el logo de tu auto.",
   "modelsTitle": "Elige tu formato.",
-  "modelsText": "Mismo software y mismas funciones. Cambia el tamaño y la forma de la pantalla según dónde lo quieras montar.",
+  "modelsText": "Mismo software y mismas funciones: arranque con tu logo, luz de cambio que flashea y tus colores. Cambia la forma según dónde lo quieras montar.",
   "readsTitle": "Lo que ve tu ECU, en tu tablero.",
   "readsText": "BB Gauges solo lee datos por el puerto OBD-II: no cambia la programación de tu carro y se quita sin dejar rastro. Al conectarse pregunta qué datos da tu auto y muestra solo esos.",
   "installTitle": "Listo en minutos.",
@@ -16,49 +16,26 @@
  "models": [
   {
    "id": "R",
-   "name": "BB Gauge Redondo",
+   "name": "R-Model",
    "shape": "round",
    "tag": "Preventa",
-   "desc": "El look de gauge clásico con pantalla táctil. Desliza para cambiar de medidor.",
+   "desc": "El formato clásico: entra en cualquier porta-gauge estándar de 52 mm. Pantalla redonda táctil: deslizas el dedo y cambias de medidor.",
    "variants": [
     {
-     "id": "R128",
-     "label": "1.28″",
+     "id": "R52",
+     "label": "52 mm",
      "specs": [
       [
-       "Pantalla",
-       "1.28″ redonda · 240×240"
+       "Tamaño",
+       "52 mm (2 1/16″), porta-gauge estándar"
       ],
-      [
-       "Montaje",
-       "Porta-gauge de 52 mm"
-      ],
-      [
-       "Control",
-       "Táctil, deslizando"
-      ],
-      [
-       "Conexión",
-       "OBD-II Bluetooth"
-      ]
-     ],
-     "price": ""
-    },
-    {
-     "id": "R21",
-     "label": "2.1″",
-     "specs": [
       [
        "Pantalla",
-       "2.1″ redonda · 480×480"
+       "Redonda, táctil"
       ],
       [
-       "Montaje",
-       "Rejilla o tablero"
-      ],
-      [
-       "Control",
-       "Táctil, deslizando"
+       "Medidores",
+       "Uno a la vez, deslizando"
       ],
       [
        "Conexión",
@@ -71,10 +48,10 @@
   },
   {
    "id": "X",
-   "name": "BB Gauge Rectangular",
+   "name": "X-Model",
    "shape": "rect",
    "tag": "Próximamente",
-   "desc": "Todo a la vista: barra de cambios, marcha, boost, aceite, agua y una fila de datos.",
+   "desc": "Panel multi-gauge: RPM y marcha al centro, con luces de cambio arriba y tus medidores a los lados. Todo a la vista de un vistazo.",
    "variants": [
     {
      "id": "X35",
@@ -85,12 +62,12 @@
        "3.5″ IPS táctil · 480×320"
       ],
       [
-       "Montaje",
-       "Tablero"
+       "En pantalla",
+       "RPM, marcha, boost y agua"
       ],
       [
-       "Control",
-       "Táctil"
+       "Montaje",
+       "Tablero o consola"
       ],
       [
        "Conexión",
@@ -108,12 +85,12 @@
        "4.3″ IPS táctil · 800×480"
       ],
       [
-       "Montaje",
-       "Tablero"
+       "En pantalla",
+       "RPM, marcha y 6 medidores"
       ],
       [
-       "Control",
-       "Táctil"
+       "Montaje",
+       "Tablero o consola"
       ],
       [
        "Conexión",
