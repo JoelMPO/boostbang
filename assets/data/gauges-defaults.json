@@ -1,0 +1,184 @@
+{
+ "whatsapp": "50769502405",
+ "texts": {
+  "heroEyebrow": "BoostBang · OBD-II · Plug & play",
+  "heroLead": "El gauge digital que lee la computadora de tu carro: RPM con luz de cambio, boost, AFR y temperaturas. Al encender, el logo de tu auto.",
+  "modelsTitle": "Elige tu formato.",
+  "modelsText": "Mismo software y mismas funciones: arranque con tu logo, luz de cambio que flashea y tus colores. Cambia la forma según dónde lo quieras montar.",
+  "readsTitle": "Lo que ve tu ECU, en tu tablero.",
+  "readsText": "BB Gauges solo lee datos por el puerto OBD-II: no cambia la programación de tu carro y se quita sin dejar rastro. Al conectarse pregunta qué datos da tu auto y muestra solo esos.",
+  "installTitle": "Listo en minutos.",
+  "videosTitle": "Míralo funcionar.",
+  "faqTitle": "Preguntas frecuentes.",
+  "orderTitle": "¿Listo para el tuyo?",
+  "orderText": "Escríbenos y te ayudamos a elegir el modelo para tu carro. Confirmamos compatibilidad, precio y entrega por WhatsApp."
+ },
+ "models": [
+  {
+   "id": "R",
+   "name": "R-Model",
+   "shape": "round",
+   "tag": "Preventa",
+   "desc": "El formato clásico: entra en cualquier porta-gauge estándar de 52 mm. Pantalla redonda táctil: deslizas el dedo y cambias de medidor.",
+   "variants": [
+    {
+     "id": "R52",
+     "label": "52 mm",
+     "specs": [
+      [
+       "Tamaño",
+       "52 mm (2 1/16″), porta-gauge estándar"
+      ],
+      [
+       "Pantalla",
+       "Redonda, táctil"
+      ],
+      [
+       "Medidores",
+       "Uno a la vez, deslizando"
+      ],
+      [
+       "Conexión",
+       "OBD-II Bluetooth"
+      ]
+     ],
+     "price": ""
+    }
+   ]
+  },
+  {
+   "id": "X",
+   "name": "X-Model",
+   "shape": "rect",
+   "tag": "Próximamente",
+   "desc": "Panel multi-gauge: RPM y marcha al centro, con luces de cambio arriba y tus medidores a los lados. Todo a la vista de un vistazo.",
+   "variants": [
+    {
+     "id": "X35",
+     "label": "3.5″",
+     "specs": [
+      [
+       "Pantalla",
+       "3.5″ IPS táctil · 480×320"
+      ],
+      [
+       "En pantalla",
+       "RPM, marcha, boost y agua"
+      ],
+      [
+       "Montaje",
+       "Tablero o consola"
+      ],
+      [
+       "Conexión",
+       "OBD-II"
+      ]
+     ],
+     "price": ""
+    },
+    {
+     "id": "X43",
+     "label": "4.3″",
+     "specs": [
+      [
+       "Pantalla",
+       "4.3″ IPS táctil · 800×480"
+      ],
+      [
+       "En pantalla",
+       "RPM, marcha y 6 medidores"
+      ],
+      [
+       "Montaje",
+       "Tablero o consola"
+      ],
+      [
+       "Conexión",
+       "OBD-II, CAN directo"
+      ]
+     ],
+     "price": ""
+    }
+   ]
+  }
+ ],
+ "reads": [
+  [
+   "RPM",
+   "Con luz de cambio verde y roja, con tus puntos",
+   1
+  ],
+  [
+   "Boost",
+   "Vacío y presión, con el máximo de la sesión",
+   1
+  ],
+  [
+   "AFR",
+   "La mezcla según la computadora",
+   1
+  ],
+  [
+   "Temp. agua",
+   "Con alerta cuando se calienta",
+   1
+  ],
+  [
+   "Temp. admisión",
+   "Aire que entra al motor",
+   1
+  ],
+  [
+   "Batería",
+   "Voltaje del sistema",
+   1
+  ],
+  [
+   "Carga y avance",
+   "Carga del motor y avance de encendido",
+   1
+  ],
+  [
+   "Aceite",
+   "Temperatura y presión, solo si tu carro las da",
+   0
+  ]
+ ],
+ "steps": [
+  [
+   "Conecta",
+   "Enchufa el adaptador al puerto OBD-II, debajo del timón."
+  ],
+  [
+   "Alimenta",
+   "Conecta la pantalla a 12 V con el cable incluido. Enciende con el carro."
+  ],
+  [
+   "Maneja",
+   "Arranca con tu logo, se conecta sola y ya ves tus datos."
+  ]
+ ],
+ "videos": [],
+ "faq": [
+  [
+   "¿Funciona con mi carro?",
+   "Funciona con autos con OBD-II, que son la gran mayoría desde 2008 en adelante. Antes de cobrarte confirmamos con tu marca, modelo y año."
+  ],
+  [
+   "¿Le hace algo a la computadora del carro?",
+   "No. Solo lee datos; no cambia la programación ni borra nada. Se instala y se quita sin dejar rastro."
+  ],
+  [
+   "¿Me descarga la batería?",
+   "Se alimenta con corriente que solo hay con el carro encendido, y el adaptador entra en reposo cuando apagas."
+  ],
+  [
+   "¿Puedo poner el logo de mi carro?",
+   "Sí. Al encender sale BoostBang y luego el logo que tú elijas. También eliges el color del gauge."
+  ],
+  [
+   "¿Cuánto cuesta y cuándo llega?",
+   "Estamos en preventa. Reserva sin costo y te escribimos con el precio y la fecha de entrega."
+  ]
+ ]
+}
