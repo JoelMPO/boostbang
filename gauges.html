@@ -236,8 +236,8 @@ if(document.readyState==='complete')done();else addEventListener('load',done);se
 
 <section id="reservar" class="order"><div class="wrap og">
  <div>
-  <p class="eyebrow">Preventa</p><h2 data-t="orderTitle">Aparta tu BB Gauge.</h2>
-  <p class="sub" data-t="orderText">Llena el formulario y te escribimos por WhatsApp para confirmar compatibilidad con tu carro, precio y fecha de entrega. Reservar no tiene costo.</p>
+  <p class="eyebrow" id="o-eb">Preventa</p><h2 data-t="orderTitle" id="o-h">Aparta tu BB Gauge.</h2>
+  <p class="sub" data-t="orderText" id="o-p">Llena el formulario y te escribimos por WhatsApp para confirmar compatibilidad con tu carro, precio y fecha de entrega. Reservar no tiene costo.</p>
  </div>
  <div id="formwrap">
  <form id="of" novalidate>
@@ -323,15 +323,23 @@ BBContent.load(G,'gauges').then(()=>{
 
  /* ===== modelos ===== */
  const sel=$("#f-model");
- $("#models").innerHTML=G.models.map((m,mi)=>`<article class="show ${mi%2?'rev':''}" data-m="${mi}">
+ const MODE=t=>t==='Disponible'?{btn:'Pedir este',eb:'Disponible',h:'Pide tu BB Gauge.',p:'Llena el formulario y te escribimos por WhatsApp para confirmar compatibilidad con tu carro, el pago y la entrega.',send:'Hacer pedido',verb:'comprar',lbl:'Pedido',ok:'¡Pedido recibido!'}
+ :(t==='Próximamente'||t==='Agotado')?{btn:t==='Agotado'?'Avísame cuando vuelva':'Avísame',eb:'Lista de espera',h:t==='Agotado'?'Te avisamos cuando vuelva.':'Te avisamos primero.',p:'Déjanos tus datos y te escribimos por WhatsApp apenas esté disponible. No tiene costo ni compromiso.',send:'Avisarme',verb:'que me avisen del',lbl:'Lista de espera',ok:'¡Te anotamos!'}
+ :{btn:'Reservar este',eb:'Preventa',h:null,p:null,send:'Reservar',verb:'reservar',lbl:'Reserva',ok:'¡Reserva recibida!'};
+$("#models").innerHTML=G.models.map((m,mi)=>`<article class="show ${mi%2?'rev':''}" data-m="${mi}">
   <div class="vis">${m.shape==='round'?`<div class="pod" data-tilt><svg class="mg" role="img" aria-label="${esc(m.name)} funcionando"></svg></div><span class="dim">52 MM</span>`
    :`<div class="frame" data-tilt><svg class="mp" role="img" aria-label="${esc(m.name)} funcionando"></svg><span class="dim"></span></div>`}</div>
   <div class="in"><span class="tag ${m.tag==='Preventa'||m.tag==='Disponible'?'':'dim2'}">${esc(m.tag)}</span><h3>${esc(m.name)}</h3><p style="margin:0;color:#cfcac0">${esc(m.desc)}</p>
   <ul class="feat"><li>Arranque con tu logo</li><li>Luz de cambio</li><li>Flash de aviso</li></ul>
   ${m.variants.length>1?`<div class="vars" role="group" aria-label="Tamaño">${m.variants.map((v,vi)=>`<button type="button" aria-pressed="${vi===m.variants.length-1}" data-v="${vi}">${esc(v.label)}</button>`).join("")}</div>`:''}
   <ul class="specs"></ul><div class="price"></div>
-  <div class="acts"><a class="btn" href="#reservar" data-pick>Reservar este</a><button class="btn ghost" type="button" data-boot>Ver arranque</button></div></div></article>`).join("");
+  <div class="acts"><a class="btn" href="#reservar" data-pick>${esc(MODE(m.tag).btn)}</a><button class="btn ghost" type="button" data-boot>Ver arranque</button></div></div></article>`).join("");
  G.models.forEach(m=>m.variants.forEach(v=>sel.insertAdjacentHTML('beforeend',`<option value="${esc(v.id)}">${esc(m.name)} ${esc(v.label)}</option>`)));
+ const H0=$("#o-h").textContent,P0=$("#o-p").textContent;
+ const modelOf=id=>G.models.find(m=>m.variants.some(v=>v.id===id));
+ window.curMode=()=>MODE((modelOf(sel.value)||{}).tag);
+ const syncMode=()=>{const md=curMode();$("#o-eb").textContent=md.eb;$("#o-h").textContent=md.h||H0;$("#o-p").textContent=md.p||P0;const b=$("#f-send");if(b)b.textContent=md.send};
+ sel.addEventListener('change',syncMode);syncMode();
  $$("#models .show").forEach(card=>{const m=G.models[+card.dataset.m];let vi=m.variants.length-1;let ctl=null;
   const vis=card.querySelector('.pod,.frame');
   const draw=()=>{const v=m.variants[vi];card.querySelector('.specs').innerHTML=v.specs.map(([a,b])=>`<li><span>${esc(a)}</span><b>${esc(b)}</b></li>`).join("");
@@ -339,7 +347,7 @@ BBContent.load(G,'gauges').then(()=>{
    card.querySelector('[data-pick]').dataset.id=v.id;
    if(m.shape==='rect'){const small=/3\.5/.test(v.label);vis.style.setProperty('--s',small?.78:1);vis.querySelector('.dim').textContent=v.label+' · '+(small?'480×320':'800×480');if(ctl)ctl.panel.setCompact(small)}};
   card.querySelectorAll('.vars button').forEach(b=>b.onclick=()=>{vi=+b.dataset.v;card.querySelectorAll('.vars button').forEach(x=>x.setAttribute('aria-pressed',x===b));draw()});
-  card.querySelector('[data-pick]').addEventListener('click',e=>{sel.value=e.currentTarget.dataset.id});
+  card.querySelector('[data-pick]').addEventListener('click',e=>{sel.value=e.currentTarget.dataset.id;sel.dispatchEvent(new Event('change'))});
   if(m.shape==='round'){const s=card.querySelector('.mg');const g=BBGauge.autoRound(s,{reboot:26});s.addEventListener('zone',e=>{vis.classList.toggle('g',e.detail==='g');vis.classList.toggle('r',e.detail==='r')});
    card.querySelector('[data-boot]').onclick=()=>{if(!g.booting)g.playBoot(null)}}
   else{const s=card.querySelector('.mp');ctl=BBGauge.autoPanel(s,{reboot:30,compact:false});s.addEventListener('zone',e=>{vis.classList.toggle('g',e.detail==='g');vis.classList.toggle('r',e.detail==='r')});
@@ -364,13 +372,13 @@ BBContent.load(G,'gauges').then(()=>{
   chk('car',v('#f-car').length>=3,'Escribe la marca, modelo y año de tu carro.');
   if(bad){$("#e-form").textContent="Revisa los campos marcados.";return}
   $("#e-form").textContent="";
-  const opt=$("#f-model").selectedOptions[0].textContent;
-  const o={product:'BB Gauges',variant:opt,accent:v('#f-color'),name:v('#f-name'),phone:v('#f-phone'),email:v('#f-email')||null,car:v('#f-car'),notes:v('#f-notes')||null};
+  const opt=$("#f-model").selectedOptions[0].textContent;const md=curMode();
+  const o={product:'BB Gauges',variant:`[${md.lbl}] ${opt}`,accent:v('#f-color'),name:v('#f-name'),phone:v('#f-phone'),email:v('#f-email')||null,car:v('#f-car'),notes:v('#f-notes')||null};
   const btn=$("#f-send");btn.disabled=true;btn.textContent="Enviando…";
   let saved=true;try{await BBContent.order(o)}catch(err){saved=false}
-  const msg=`¡Hola BoostBang! Quiero reservar un ${opt} (color ${o.accent}).\nNombre: ${o.name}\nCarro: ${o.car}${o.notes?`\nComentarios: ${o.notes}`:''}`;
+  const msg=`¡Hola BoostBang! Quiero ${md.verb} ${md.verb.endsWith('del')?'':'un '}${opt} (color ${o.accent}).\nNombre: ${o.name}\nCarro: ${o.car}${o.notes?`\nComentarios: ${o.notes}`:''}`;
   const wa=`https://wa.me/${G.whatsapp}?text=${encodeURIComponent(msg)}`;
-  $("#formwrap").innerHTML=`<div class="ok" role="status"><h3>${saved?'¡Reserva recibida!':'Casi listo'}</h3><p>${saved?'Te escribimos pronto por WhatsApp para confirmar.':'No pudimos guardar la reserva en línea. Envíanosla por WhatsApp y la anotamos.'}</p><a class="btn" href="${wa}" target="_blank" rel="noopener">Abrir WhatsApp</a></div>`;
+  $("#formwrap").innerHTML=`<div class="ok" role="status"><h3>${saved?md.ok:'Casi listo'}</h3><p>${saved?'Te escribimos pronto por WhatsApp para confirmar.':'No pudimos guardarlo en línea. Envíanosla por WhatsApp y la anotamos.'}</p><a class="btn" href="${wa}" target="_blank" rel="noopener">Abrir WhatsApp</a></div>`;
   window.open(wa,'_blank','noopener');
  });
  /* aparecer al hacer scroll */
