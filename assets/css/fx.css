@@ -1,0 +1,85 @@
+/* BoostBang · capa de interacción (botones, tarjetas, aparición, etiquetas) */
+:root{--ease:cubic-bezier(.2,.8,.2,1)}
+/* barra de progreso de lectura */
+#fx-prog{position:fixed;left:0;top:0;height:3px;width:100%;background:var(--y,#E10600);transform-origin:0 50%;transform:scaleX(0);z-index:999;pointer-events:none;box-shadow:0 0 10px rgba(225,6,0,.7)}
+/* header que se compacta */
+header{transition:background .3s,box-shadow .3s,backdrop-filter .3s}
+header.fx-scrolled{background:rgba(6,6,6,.82)!important;backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:0 8px 30px rgba(0,0,0,.45)}
+header .bar{transition:height .3s var(--ease)}
+header.fx-scrolled .bar{height:56px}
+/* nav: subrayado animado */
+nav a{position:relative;border-bottom-color:transparent!important}
+nav a::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--y,#E10600);transform:scaleX(0);transform-origin:left;transition:transform .35s var(--ease)}
+nav a:hover::after,nav a.on::after{transform:scaleX(1)}
+/* botones: brillo, elevación, presión y onda */
+.btn{position:relative;overflow:hidden;isolation:isolate;transition:background .25s,color .25s,border-color .25s,transform .2s var(--ease),box-shadow .25s}
+.btn::before{content:"";position:absolute;inset:0;background:linear-gradient(105deg,transparent 30%,rgba(255,255,255,.28) 50%,transparent 70%);transform:translateX(-120%);transition:transform .7s var(--ease);z-index:-1}
+.btn:hover::before{transform:translateX(120%)}
+.btn:not([aria-disabled=true]):hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(225,6,0,.28)}
+.btn.ghost:not([aria-disabled=true]):hover{box-shadow:0 10px 24px rgba(0,0,0,.4)}
+.btn:not([aria-disabled=true]):active{transform:translateY(0) scale(.97);box-shadow:none}
+.fx-rip{position:absolute;border-radius:50%;background:rgba(255,255,255,.45);transform:scale(0);animation:fxrip .6s var(--ease) forwards;pointer-events:none;z-index:-1}
+@keyframes fxrip{to{transform:scale(4);opacity:0}}
+.btn.fx-arrow::after{content:"→";display:inline-block;margin-left:10px;transition:transform .3s var(--ease)}
+.btn.fx-arrow:hover::after{transform:translateX(5px)}
+/* filtros y pastillas */
+.filters button,.vars button{transition:background .25s,border-color .25s,color .25s,transform .15s}
+.filters button:active,.vars button:active{transform:scale(.95)}
+.filters button[aria-pressed=true]{box-shadow:0 6px 18px rgba(225,6,0,.3)}
+/* tallas y colores: rebote al marcar */
+.szs span{transition:background .2s,border-color .2s,transform .2s var(--ease)!important}
+.szs input:hover+span{transform:translateY(-2px)}
+.szs input:checked+span{animation:fxpop .35s var(--ease)}
+.cols label{transition:transform .2s var(--ease)}
+.cols label:hover{transform:scale(1.12)}
+.cols input:checked~*{animation:fxpop .35s var(--ease)}
+@keyframes fxpop{0%{transform:scale(.85)}60%{transform:scale(1.1)}100%{transform:scale(1)}}
+/* tarjetas */
+.theme .pic,.prod .pic,.build .cview,.cg .pic,.dz,.model .vis{overflow:hidden}
+.theme img,.prod .pic img,.cg img,.dz img{transition:transform .7s var(--ease),filter .5s}
+.theme:hover img,.prod:hover .pic img,.cg:hover img,.dz:hover img{transform:scale(1.06)}
+.prod,.rv,.dz,.model,.rd,.stp{transition:transform .35s var(--ease),border-color .3s,box-shadow .35s}
+.prod:hover,.rv:hover,.dz:hover,.model:hover,.rd:hover{transform:translateY(-4px);border-color:rgba(225,6,0,.65);box-shadow:0 18px 40px rgba(0,0,0,.5),0 0 0 1px rgba(225,6,0,.25)}
+.theme h3{transition:letter-spacing .4s var(--ease),color .3s}
+.theme:hover h3{color:var(--y,#E10600);letter-spacing:.03em}
+.cell .ca,.cell span:not(.play){transition:transform .4s var(--ease)}
+.cell::after{content:"";position:absolute;inset:0;box-shadow:inset 0 0 0 0 var(--y,#E10600);transition:box-shadow .3s;pointer-events:none}
+.cell:hover::after,.cell:focus-visible::after{box-shadow:inset 0 0 0 3px var(--y,#E10600)}
+/* etiquetas de formulario flotantes en foco */
+label:focus-within{color:#fff}
+input,select,textarea{transition:border-color .2s,box-shadow .2s,background .2s}
+input:focus,select:focus,textarea:focus{box-shadow:0 0 0 3px rgba(225,6,0,.22)}
+input:not(:placeholder-shown):valid{border-color:#3a3a3a}
+/* aparición al hacer scroll */
+.fx-r{opacity:0;transform:translateY(28px);transition:opacity .8s var(--ease),transform .8s var(--ease);transition-delay:var(--d,0s)}
+.fx-r.fx-in{opacity:1;transform:none}
+/* título de portada palabra por palabra */
+.fx-w{display:inline-block;opacity:0;transform:translateY(.4em) skewY(4deg);animation:fxw .9s var(--ease) forwards;animation-delay:var(--d,0s)}
+@keyframes fxw{to{opacity:1;transform:none}}
+/* cambio de pestaña */
+.tab.fx-tab{animation:fxtab .5s var(--ease)}
+@keyframes fxtab{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+/* botones flotantes */
+.fx-float{position:fixed;right:16px;z-index:60;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;border:0;cursor:pointer;transition:transform .3s var(--ease),opacity .3s,box-shadow .3s;box-shadow:0 10px 26px rgba(0,0,0,.5)}
+.fx-float:hover{transform:translateY(-3px) scale(1.05)}
+.fx-float:active{transform:scale(.94)}
+#fx-wa{bottom:calc(18px + env(safe-area-inset-bottom,0px));background:#25D366;color:#fff}
+#fx-wa::before{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid #25D366;animation:fxpulse 2.4s infinite}
+@keyframes fxpulse{0%{transform:scale(1);opacity:.8}100%{transform:scale(1.6);opacity:0}}
+#fx-top{bottom:calc(82px + env(safe-area-inset-bottom,0px));background:#151515;color:#fff;border:1px solid #333;opacity:0;pointer-events:none;transform:translateY(10px)}
+#fx-top.on{opacity:1;pointer-events:auto;transform:none}
+.fx-float svg{width:26px;height:26px}
+.fx-float .fx-tip{position:absolute;right:64px;white-space:nowrap;background:#111;border:1px solid #333;color:#fff;font:600 13px var(--bo,system-ui);padding:6px 10px;opacity:0;transform:translateX(6px);transition:.25s;pointer-events:none}
+.fx-float:hover .fx-tip,.fx-float:focus-visible .fx-tip{opacity:1;transform:none}
+/* aviso al abrir WhatsApp */
+#fx-toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,20px);background:#111;border:1px solid #25D366;color:#fff;padding:12px 18px;font:500 15px var(--bo,system-ui);z-index:1000;opacity:0;transition:.35s var(--ease);pointer-events:none;max-width:90vw}
+#fx-toast.on{opacity:1;transform:translate(-50%,0)}
+/* foco visible más claro */
+:focus-visible{outline:3px solid var(--y,#E10600)!important;outline-offset:3px;border-radius:2px}
+@media(prefers-reduced-motion:reduce){
+ .fx-r,.fx-w{opacity:1!important;transform:none!important;animation:none!important;transition:none!important}
+ .btn::before,#fx-wa::before{display:none}
+ *{scroll-behavior:auto!important}
+}
+@media(hover:none){.prod:hover,.rv:hover,.dz:hover,.model:hover,.rd:hover{transform:none}}
+@media(max-width:600px){.fx-float{width:46px;height:46px;right:12px}#fx-top{bottom:calc(70px + env(safe-area-inset-bottom,0px))}.fx-float svg{width:22px;height:22px}}
