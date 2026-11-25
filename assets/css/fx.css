@@ -114,3 +114,6 @@ input:not(:placeholder-shown):valid{border-color:#3a3a3a}
 @keyframes tick{to{transform:translateX(-50%)}}
 @media(prefers-reduced-motion:reduce){.ticker .tr{animation:none}}
 @media(max-width:520px){.qa-c b{font-size:23px}.qa-c{padding:20px 16px 48px;min-height:150px}}
+
+.back{grid-column:1/-1;justify-self:start;align-self:start;width:max-content}
+.com{row-gap:36px}
