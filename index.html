@@ -145,7 +145,8 @@ nav a:hover,nav a.on{border-color:var(--y)}
 /* merch */
 #merch{background:var(--deep);border-top:1px solid var(--bd)}
 .prods{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:20px;margin-top:40px}
-.prod{display:flex;flex-direction:column;border:1px solid var(--bd);background:var(--bg)}
+.prod{position:relative;display:flex;flex-direction:column;border:1px solid var(--bd);background:var(--bg)}
+.pbadge{position:absolute;z-index:2;top:14px;left:-6px;background:var(--y);color:#fff;font:700 14px/1 var(--hd);letter-spacing:.14em;text-transform:uppercase;padding:8px 14px;transform:skewX(-12deg);box-shadow:0 6px 18px rgba(225,6,0,.35)}
 .prod .pic{aspect-ratio:7/4}
 .prod .in{padding:18px;display:flex;flex-direction:column;gap:6px;flex:1}
 .prod h3{font-size:28px}
@@ -294,7 +295,10 @@ footer{background:var(--deep);border-top:1px solid var(--bd);padding:64px 0 28px
 </style>
 <link rel="icon" type="image/png" href="assets/img/favicon.png">
 <link rel="apple-touch-icon" href="assets/img/favicon.png">
-<style>.dsec{margin-top:60px;padding:clamp(18px,3vw,32px);border:1px solid var(--bd);background:linear-gradient(135deg,#141414,#0b0b0b)}
+<style>.cmod{border:1px solid var(--bd);background:var(--bg);margin-top:28px;overflow:hidden}
+.cmod .custom{border:0;margin:0;background:none}
+.cmod .dsec{margin:0;border:0;border-top:1px solid var(--bd);background:linear-gradient(180deg,#121212,#0a0a0a)}
+.dsec{margin-top:60px;padding:clamp(18px,3vw,32px);border:1px solid var(--bd);background:linear-gradient(135deg,#141414,#0b0b0b)}
 .dhead{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
 .dctl{display:flex;gap:8px;align-items:center}
 .dnav{width:48px;height:48px;border:1px solid #333;background:#111;color:var(--tx);font:700 24px var(--hd);cursor:pointer;transition:border-color .2s,color .2s,transform .15s}
@@ -371,7 +375,6 @@ if(document.readyState==='complete')done();else addEventListener('load',done);se
  <div class="scroll" aria-hidden="true"></div>
 </section>
 
-<div class="ticker" aria-hidden="true"><div class="tr"><span>Drift</span><span>Tuning</span><span>Boost</span><span>Proyectos</span><span>Comunidad</span><span>BB Gauges</span><span>Merch</span><span>Car Shots</span><span>Drift</span><span>Tuning</span><span>Boost</span><span>Proyectos</span><span>Comunidad</span><span>BB Gauges</span><span>Merch</span><span>Car Shots</span></div></div>
 <section id="intro"><div class="wrap">
  <div class="intro-top"><h2 data-t="introTitle">Más que máquinas. Una forma de vida.</h2>
  <p data-t="introText">BoostBang nace de nuestra pasión por los autos y todo lo que pasa a su alrededor. Desde proyectos armados pieza por pieza hasta encuentros, fotografía y nuevas amistades, celebramos la cultura que nos mueve.</p></div>
@@ -417,15 +420,18 @@ if(document.readyState==='complete')done();else addEventListener('load',done);se
   <div class="shirts-head">
    <h3 class="sh">Camisetas</h3>
   </div>
+  <div class="cmod">
   <div id="custom"></div>
   <div class="dsec" id="designs">
-   <div class="dhead"><div><p class="eyebrow" style="margin:0 0 8px">Opción 2 · Diseños listos</p><h3 class="sh sh2" style="margin:0" data-t="designsTitle">Catálogo de diseños</h3>
+   <div class="dhead"><div><p class="eyebrow" style="margin:0 0 8px">¿Prefieres algo ya listo?</p><h3 class="sh sh2" style="margin:0" data-t="designsTitle">Catálogo de diseños</h3>
     <p class="sub" style="margin-top:10px" data-t="designsText">Desliza, elige tu favorito y pídelo con su código por WhatsApp.</p></div>
     <div class="dctl"><button type="button" class="dnav" id="dprev" aria-label="Diseños anteriores">‹</button><button type="button" class="dnav" id="dnext" aria-label="Más diseños">›</button><button type="button" class="btn" id="dall">Ver todos</button></div></div>
    <div class="dtrack" id="dgrid" tabindex="0" aria-label="Carrusel de diseños"></div>
   </div>
+  </div>
   <ul class="facts" id="facts"></ul>
   <div class="prods" id="prods"></div>
+  <div id="prods-more"></div>
   <div class="ly"><h3 class="sh sh2">Los Yectos</h3><div class="prods" id="prods-ly"></div></div>
   <div class="ly" id="kc"></div>
  </div>
@@ -587,7 +593,7 @@ const CONFIG = {
   shirt: {price:25, sizes:["S","M","L","XL","XXL","XXXL"], gift:"Souvenir incluido", colors:[{name:"Negro",css:"#0b0b0b"},{name:"Blanco",css:"#f5f5f5"},{name:"Tie Dye",css:"conic-gradient(from 30deg,#ff2d95,#ffd400,#39e75f,#27c4ff,#8a4dff,#ff2d95)"}]},   // precio en USD · tallas unisex
   custom: {name:"Custom Tshirt", lead:"Tu auto, tu camiseta", img:IMG.custom, alt:"Cartel Custom Design: de la foto de un auto a su ilustración, junto a varios diseños de autos tuner",
     steps:["Mándanos por WhatsApp una foto de tu auto.","Te enviamos 3 diseños basados en tu auto.","Tú eliges el que más te guste y lo llevamos a tu camiseta."],
-    alt2:"¿Prefieres algo ya listo? Mira el catálogo de diseños aquí abajo: elige el tuyo y pídelo con su código.",
+    alt2:"¿No tienes foto o quieres algo ya listo? Desliza el catálogo aquí abajo, elige un diseño y pídelo con su código.",
     ctaPhoto:"Enviar la foto de mi auto", msgPhoto:"¡Hola BoostBang! Quiero una Custom Tshirt. Les paso la foto de mi auto.",
     ctaDesigns:"Ver los +300 diseños", msgDesigns:"¡Hola BoostBang! Quiero ver los más de 300 diseños para elegir mi camiseta."},
   keychain: {name:"Llaveros", price:3.5, desc:"Llaveros con los diseños de BoostBang y Los Yectos.", msg:"¡Hola BoostBang! Me interesan los llaveros ($3.50). ¿Me confirman disponibilidad?",
@@ -699,9 +705,14 @@ $$(".car").forEach(initCar);
 /* merch */
 const SH=CONFIG.shirt, money=n=>`$${n}`;
 $("#facts").innerHTML=`<li><b>${money(SH.price)}</b> por camiseta</li><li><b>${SH.sizes[0]} – ${SH.sizes[SH.sizes.length-1]}</b> tallas unisex</li><li><b>${esc(SH.gift)}</b></li>`;
-const card=(p,i)=>`<article class="prod${p.wide?" wide":""}" data-i="${i}">${pic(p.img,p.alt,"Foto del producto",true,p.pos)}<div class="in"><h3>${esc(p.name)}</h3>${p.options?`<p class="opts">${esc(p.options)}</p>`:""}<div class="pr"><span class="price">${money(p.price??SH.price)}</span><span class="gift">${esc(SH.gift)}</span></div><fieldset class="colors"><legend>Color: <b class="cname">${esc(p.color||SH.colors[0].name)}</b></legend><div class="cols">${SH.colors.map(c=>`<label data-name="${esc(c.name)}"><input type="radio" name="cl${i}" value="${esc(c.name)}" aria-label="${esc(c.name)}"${c.name===(p.color||SH.colors[0].name)?" checked":""}><i style="background:${c.css}"></i></label>`).join("")}</div></fieldset><fieldset class="sizes"><legend>Elige tu talla (unisex)</legend><div class="szrow"><div class="szs">${SH.sizes.map(z=>`<label><input type="radio" name="sz${i}" value="${z}"><span>${z}</span></label>`).join("")}</div><div class="tlabel" aria-hidden="true"><img src="${IMG.logoSm}" alt=""><div class="tbox"><b class="tsz">–</b><span>Talla<br>unisex</span></div><small>boostbangpa</small></div></div></fieldset><a class="btn order" href="#camisetas" aria-disabled="true">Elige tu talla</a><p class="hint" role="status"></p></div></article>`;
-$("#prods").innerHTML=CONFIG.products.map((p,i)=>p.group?"":card(p,i)).join("");
-$("#prods-ly").innerHTML=CONFIG.products.map((p,i)=>p.group==="Los Yectos"?card(p,i):"").join("");
+const ONE=["Gorra","Accesorio"],szOf=p=>p.sizes&&p.sizes.length?p.sizes:(ONE.includes(p.type)?["Única"]:SH.sizes);
+const PL={Hoodie:"Hoodies",Sudadera:"Sudaderas","Tank top":"Tank tops",Gorra:"Gorras",Accesorio:"Accesorios",Otro:"Más merch"};
+const secOf=p=>p.group||(p.type&&p.type!=="Camiseta"?PL[p.type]||p.type:"");
+const card=(p,i)=>`<article class="prod${p.wide?" wide":""}" data-i="${i}">${p.badge?`<span class="pbadge">${esc(p.badge)}</span>`:""}${pic(p.img,p.alt,"Foto del producto",true,p.pos)}<div class="in"><h3>${esc(p.name)}</h3>${p.options?`<p class="opts">${esc(p.options)}</p>`:""}<div class="pr"><span class="price">${money(p.price??SH.price)}</span><span class="gift">${esc(SH.gift)}</span></div><fieldset class="colors"><legend>Color: <b class="cname">${esc(p.color||SH.colors[0].name)}</b></legend><div class="cols">${SH.colors.map(c=>`<label data-name="${esc(c.name)}"><input type="radio" name="cl${i}" value="${esc(c.name)}" aria-label="${esc(c.name)}"${c.name===(p.color||SH.colors[0].name)?" checked":""}><i style="background:${c.css}"></i></label>`).join("")}</div></fieldset><fieldset class="sizes"><legend>${szOf(p).length===1?"Talla":"Elige tu talla (unisex)"}</legend><div class="szrow"><div class="szs">${szOf(p).map(z=>`<label><input type="radio" name="sz${i}" value="${esc(z)}"><span>${esc(z)}</span></label>`).join("")}</div><div class="tlabel" aria-hidden="true"><img src="${IMG.logoSm}" alt=""><div class="tbox"><b class="tsz">–</b><span>Talla<br>unisex</span></div><small>boostbangpa</small></div></div></fieldset><a class="btn order" href="#camisetas" aria-disabled="true">Elige tu talla</a><p class="hint" role="status"></p></div></article>`;
+$("#prods").innerHTML=CONFIG.products.map((p,i)=>secOf(p)?"":card(p,i)).join("");
+$("#prods-ly").innerHTML=CONFIG.products.map((p,i)=>secOf(p)==="Los Yectos"?card(p,i):"").join("");
+{const secs=[...new Set(CONFIG.products.map(secOf).filter(x=>x&&x!=="Los Yectos"))];
+ $("#prods-more").innerHTML=secs.map(n=>`<div class="ly"><h3 class="sh sh2">${esc(n)}</h3><div class="prods">${CONFIG.products.map((p,i)=>secOf(p)===n?card(p,i):"").join("")}</div></div>`).join("");}
 
 const waBtn=(label,msg,cls="")=>waOk?`<a class="btn ${cls}" target="_blank" rel="noopener" href="${waLink(msg)}">${label}</a>`:`<a class="btn ${cls}" aria-disabled="true" href="#wa-setup">WhatsApp sin configurar</a>`;
 const CU=CONFIG.custom;
@@ -721,7 +732,7 @@ function updOrder(card){
 $("#camisetas").addEventListener("change",e=>{const c=e.target.closest(".prod");if(c)updOrder(c)});
 $("#camisetas").addEventListener("click",e=>{const b=e.target.closest(".order");if(!b||b.getAttribute("aria-disabled")!=="true")return;e.preventDefault();
   if(!waOk)$("#wa-setup").scrollIntoView({block:"center"});else $(".hint",b.closest(".prod")).textContent="Elige una talla para hacer tu pedido."});
-$$(".prod").forEach(updOrder);
+$$(".prod").forEach(c=>{const r=$$(".szs input",c);if(r.length===1)r[0].checked=true;updOrder(c)});
 $("#wa-setup").hidden=waOk;
 /* community */
 $("#clinks").innerHTML=socials.map(([n,,u])=>u

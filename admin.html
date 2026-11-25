@@ -125,16 +125,16 @@ function fieldHTML(f,v,key){
    case 'lines':return `<label${w}>${L}<textarea data-k="${key}" data-lines>${esc((v||[]).join('\n'))}</textarea></label>`;
    case 'kv':return `<label${w}>${L}<textarea data-k="${key}" data-kv placeholder="Pantalla: 2.1″ redonda">${esc((v||[]).map(x=>x.join(': ')).join('\n'))}</textarea></label>`;
    case 'num':return `<label${w}>${L}<input type="number" step="any" data-k="${key}" value="${esc(v)}"></label>`;
-   case 'sel':return `<label${w}>${L}<select data-k="${key}">${f.opts.map(o=>`<option ${o===v?'selected':''}>${esc(o)}</option>`).join('')}</select></label>`;
+   case 'sel':return `<label${w}>${L}<select data-k="${key}">${f.opts.map(o=>`<option ${o===(v||f.opts[0])?'selected':''}>${esc(o)}</option>`).join('')}</select></label>`;
    case 'img':case 'video':return `<div class="imgf${f.wide?' wide':''}"><label>${L}<input data-k="${key}" value="${esc(v)}" placeholder="URL"></label><div class="pv">${v?(f.t==='img'?`<img src="${esc(v)}" alt="">`:`<video src="${esc(v)}" muted></video>`):''}<label class="btn g sm" style="display:inline-block;text-transform:none">Subir ${f.t==='img'?'foto':'video'}<input type="file" accept="${f.t==='img'?'image/*':'video/*'}" data-up="${key}" hidden></label></div></div>`;
    default:return `<label${w}>${L}<input data-k="${key}" value="${esc(v)}"></label>`;
   }
 }
-function listEditor(host,{doc,key,fields,title,help,thumb,folder,blank,toItem,fromItem}){
+function listEditor(host,{doc,key,fields,title,help,thumb,folder,blank,toItem,fromItem,addLabel}){
   toItem=toItem||(x=>x);fromItem=fromItem||(x=>x);
   const arr=()=>D[doc][key]||(D[doc][key]=[]);
   function draw(){
-    host.innerHTML=`<h1>${esc(title)}</h1>${help?`<p class="mu">${help}</p>`:''}<div class="row"><button class="btn" data-add>+ Agregar</button></div><div data-list></div>`;
+    host.innerHTML=`<h1>${esc(title)}</h1>${help?`<p class="mu">${help}</p>`:''}<div class="row"><button class="btn" data-add>${addLabel||'+ Agregar'}</button></div><div data-list></div>`;
     const list=host.querySelector('[data-list]');
     arr().forEach((raw,i)=>{const it=toItem(raw);const el=document.createElement('div');el.className='item';
       const th=thumb?it[thumb]:null;
@@ -194,7 +194,7 @@ async function boot(session){
   [D.site,D.gauges]=await Promise.all([loadDoc('site','assets/data/site-defaults.json'),loadDoc('gauges','assets/data/gauges-defaults.json')]);
   const S=D.site;
   const TABS=[
-   ['textos','Títulos y textos'],['hero','Portada'],['galeria','Galería'],['proyectos','Proyectos'],['camisetas','Camisetas'],['disenos','Diseños'],
+   ['textos','Títulos y textos'],['hero','Portada'],['galeria','Galería'],['proyectos','Proyectos'],['camisetas','Prendas'],['disenos','Diseños'],
    ['otros','Llaveros y precios'],['resenas','Reseñas'],['comunidad','Comunidad'],['g-modelos','BB Gauges · Modelos'],['g-videos','BB Gauges · Videos'],['g-faq','BB Gauges · FAQ'],['g-textos','BB Gauges · Textos'],['reservas','Reservas']];
   app.innerHTML=`<div class="top"><img src="assets/img/logoWhite.webp" alt="BoostBang"><b>Admin</b><span class="sp"></span><a href="index.html" target="_blank">Ver sitio</a><a href="gauges.html" target="_blank">Ver BB Gauges</a><button class="btn g sm" id="out">Salir</button></div>
    <nav class="tabs" role="tablist">${TABS.map(([k,l],i)=>`<button role="tab" data-tab="${k}" aria-selected="${i===0}">${l}</button>`).join('')}</nav>
@@ -218,9 +218,9 @@ async function boot(session){
      toItem:b=>({...b,extraUrls:(b.extra||[]).map(x=>typeof x==='string'?x:x.img)}),
      fromItem:it=>{const o={...it};o.extra=(it.extraUrls||[]).map(u=>({img:u,pos:'50% 50%',alt:it.name}));delete o.extraUrls;return o},
      blank:{name:'',makeModel:'',img:'',pos:'50% 50%',alt:'',desc:'',mods:[],extra:[]}}),
-   camisetas:()=>listEditor(V,{doc:'site',key:'products',title:'Camisetas',help:'Si dejas el precio vacío se usa el precio general (pestaña Llaveros y precios). Grupo "Los Yectos" la pone en esa sección.',thumb:'img',
-     fields:[{k:'name',label:'Nombre'},{k:'price',label:'Precio (opcional)',t:'num'},{k:'img',label:'Foto',t:'img'},{k:'options',label:'Detalle'},{k:'color',label:'Color fijo (opcional)'},{k:'group',label:'Grupo (opcional)'},{k:'alt',label:'Descripción de la foto',wide:true}],
-     blank:{name:'Camiseta ',img:'',alt:'',options:'Estampado en frente y espalda'}}),
+   camisetas:()=>listEditor(V,{doc:'site',key:'products',title:'Prendas',addLabel:'+ Nueva prenda',help:'Agrega camisetas, hoodies, gorras o lo que quieras vender. Cada tipo que no sea camiseta sale en su propia sección del sitio (por ejemplo "Hoodies"). Si dejas el precio vacío se usa el precio general; si dejas las tallas vacías se usan las tallas generales (gorras y accesorios salen como talla única). La etiqueta sale como cinta sobre la foto (ej: Nuevo, Edición limitada, Agotado). Después de agregar o editar, toca Guardar arriba.',thumb:'img',
+     fields:[{k:'type',label:'Tipo de prenda',t:'sel',opts:['Camiseta','Hoodie','Sudadera','Tank top','Gorra','Accesorio','Otro']},{k:'name',label:'Nombre'},{k:'price',label:'Precio (opcional)',t:'num'},{k:'badge',label:'Etiqueta (opcional)'},{k:'img',label:'Foto',t:'img'},{k:'options',label:'Detalle (ej: Estampado en frente y espalda)'},{k:'color',label:'Color fijo (opcional)'},{k:'group',label:'Sección propia (opcional, ej: Los Yectos)'},{k:'sizes',label:'Tallas (opcional, una por línea)',t:'lines'},{k:'alt',label:'Descripción de la foto',wide:true}],
+     blank:{type:'Camiseta',name:'',img:'',alt:'',options:'Estampado en frente y espalda',badge:'Nuevo'}}),
    disenos:()=>listEditor(V,{doc:'site',key:'designs',title:'Catálogo de diseños',help:'Las fotos que subas aquí se comprimen. Para que no se puedan aprovechar, súbelas con marca de agua o en baja resolución.',thumb:'img',folder:'designs',
      fields:[{k:'code',label:'Código'},{k:'name',label:'Nombre'},{k:'make',label:'Marca (para el filtro)'},{k:'img',label:'Imagen',t:'img'}],blank:{code:'BB-',name:'',make:'',img:''}}),
    otros:()=>{V.innerHTML='<div id="a"></div><div id="b"></div>';
