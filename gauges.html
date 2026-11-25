@@ -93,6 +93,7 @@ header{position:sticky;top:0;z-index:50;background:rgba(6,6,6,.92);backdrop-filt
 .show .in{display:flex;flex-direction:column;gap:14px;position:relative}
 .show h3{font-size:clamp(40px,5vw,64px)}
 .tag{align-self:flex-start;font:700 13px var(--hd);letter-spacing:.14em;text-transform:uppercase;background:var(--y);color:#fff;padding:4px 10px;transform:skewX(-10deg)}
+.btn.wa{background:#25D366;border-color:#25D366;color:#06140B}.btn.wa:hover{background:transparent;color:#25D366}
 .tag.dim2{background:#2a2a2a;color:#cfcac0}
 .vars{display:flex;gap:8px;flex-wrap:wrap}
 .vars button{border:1px solid #3a3a3a;background:#111;color:var(--tx);font:700 18px var(--hd);letter-spacing:.06em;padding:10px 18px;cursor:pointer;min-height:46px}
@@ -323,7 +324,7 @@ BBContent.load(G,'gauges').then(()=>{
 
  /* ===== modelos ===== */
  const sel=$("#f-model");
- const MODE=t=>t==='Disponible'?{btn:'Pedir este',eb:'Disponible',h:'Pide tu BB Gauge.',p:'Llena el formulario y te escribimos por WhatsApp para confirmar compatibilidad con tu carro, el pago y la entrega.',send:'Hacer pedido',verb:'comprar',lbl:'Pedido',ok:'¡Pedido recibido!'}
+ const MODE=t=>t==='Disponible'?{wa:1,btn:'Pedir por WhatsApp',eb:'Disponible',h:'Pide tu BB Gauge.',p:'Llena tus datos y se abre WhatsApp con el pedido listo para enviar. Ahí confirmamos compatibilidad con tu carro, el pago y la entrega.',send:'Pedir por WhatsApp',verb:'comprar',lbl:'Pedido',ok:'¡Pedido listo!'}
  :(t==='Próximamente'||t==='Agotado')?{btn:t==='Agotado'?'Avísame cuando vuelva':'Avísame',eb:'Lista de espera',h:t==='Agotado'?'Te avisamos cuando vuelva.':'Te avisamos primero.',p:'Déjanos tus datos y te escribimos por WhatsApp apenas esté disponible. No tiene costo ni compromiso.',send:'Avisarme',verb:'que me avisen del',lbl:'Lista de espera',ok:'¡Te anotamos!'}
  :{btn:'Reservar este',eb:'Preventa',h:null,p:null,send:'Reservar',verb:'reservar',lbl:'Reserva',ok:'¡Reserva recibida!'};
 $("#models").innerHTML=G.models.map((m,mi)=>`<article class="show ${mi%2?'rev':''}" data-m="${mi}">
@@ -344,10 +345,13 @@ $("#models").innerHTML=G.models.map((m,mi)=>`<article class="show ${mi%2?'rev':'
   const vis=card.querySelector('.pod,.frame');
   const draw=()=>{const v=m.variants[vi];card.querySelector('.specs').innerHTML=v.specs.map(([a,b])=>`<li><span>${esc(a)}</span><b>${esc(b)}</b></li>`).join("");
    card.querySelector('.price').innerHTML=v.price?`${esc(v.price)}`:`Precio por anunciar<small>Reserva sin costo</small>`;
-   card.querySelector('[data-pick]').dataset.id=v.id;
+   const pk=card.querySelector('[data-pick]');pk.dataset.id=v.id;
+   if(MODE(m.tag).wa){const msg=`¡Hola BoostBang! Quiero pedir un BB Gauge ${m.name} ${v.label}${v.price?` (${v.price})`:''}.\n${v.specs.map(([a,b])=>`• ${a}: ${b}`).join('\n')}\n\nMi carro es (marca, modelo y año): `;
+    pk.href=`https://wa.me/${G.whatsapp}?text=${encodeURIComponent(msg)}`;pk.target='_blank';pk.rel='noopener';pk.classList.add('wa');
+    card.querySelector('.price').innerHTML=v.price?`${esc(v.price)}<small>Pide por WhatsApp</small>`:`Consulta el precio<small>por WhatsApp</small>`}
    if(m.shape==='rect'){const small=/3\.5/.test(v.label);vis.style.setProperty('--s',small?.78:1);vis.querySelector('.dim').textContent=v.label+' · '+(small?'480×320':'800×480');if(ctl)ctl.panel.setCompact(small)}};
   card.querySelectorAll('.vars button').forEach(b=>b.onclick=()=>{vi=+b.dataset.v;card.querySelectorAll('.vars button').forEach(x=>x.setAttribute('aria-pressed',x===b));draw()});
-  card.querySelector('[data-pick]').addEventListener('click',e=>{sel.value=e.currentTarget.dataset.id;sel.dispatchEvent(new Event('change'))});
+  card.querySelector('[data-pick]').addEventListener('click',e=>{if(MODE(m.tag).wa)return;sel.value=e.currentTarget.dataset.id;sel.dispatchEvent(new Event('change'))});
   if(m.shape==='round'){const s=card.querySelector('.mg');const g=BBGauge.autoRound(s,{reboot:26});s.addEventListener('zone',e=>{vis.classList.toggle('g',e.detail==='g');vis.classList.toggle('r',e.detail==='r')});
    card.querySelector('[data-boot]').onclick=()=>{if(!g.booting)g.playBoot(null)}}
   else{const s=card.querySelector('.mp');ctl=BBGauge.autoPanel(s,{reboot:30,compact:false});s.addEventListener('zone',e=>{vis.classList.toggle('g',e.detail==='g');vis.classList.toggle('r',e.detail==='r')});
@@ -375,10 +379,10 @@ $("#models").innerHTML=G.models.map((m,mi)=>`<article class="show ${mi%2?'rev':'
   const opt=$("#f-model").selectedOptions[0].textContent;const md=curMode();
   const o={product:'BB Gauges',variant:`[${md.lbl}] ${opt}`,accent:v('#f-color'),name:v('#f-name'),phone:v('#f-phone'),email:v('#f-email')||null,car:v('#f-car'),notes:v('#f-notes')||null};
   const btn=$("#f-send");btn.disabled=true;btn.textContent="Enviando…";
-  let saved=true;try{await BBContent.order(o)}catch(err){saved=false}
+  let saved=true;if(!md.wa){try{await BBContent.order(o)}catch(err){saved=false}}
   const msg=`¡Hola BoostBang! Quiero ${md.verb} ${md.verb.endsWith('del')?'':'un '}${opt} (color ${o.accent}).\nNombre: ${o.name}\nCarro: ${o.car}${o.notes?`\nComentarios: ${o.notes}`:''}`;
   const wa=`https://wa.me/${G.whatsapp}?text=${encodeURIComponent(msg)}`;
-  $("#formwrap").innerHTML=`<div class="ok" role="status"><h3>${saved?md.ok:'Casi listo'}</h3><p>${saved?'Te escribimos pronto por WhatsApp para confirmar.':'No pudimos guardarlo en línea. Envíanosla por WhatsApp y la anotamos.'}</p><a class="btn" href="${wa}" target="_blank" rel="noopener">Abrir WhatsApp</a></div>`;
+  $("#formwrap").innerHTML=`<div class="ok" role="status"><h3>${saved?md.ok:'Casi listo'}</h3><p>${md.wa?'Se abrió WhatsApp con tu pedido listo: solo toca enviar.':saved?'Te escribimos pronto por WhatsApp para confirmar.':'No pudimos guardarlo en línea. Envíanosla por WhatsApp y la anotamos.'}</p><a class="btn" href="${wa}" target="_blank" rel="noopener">Abrir WhatsApp</a></div>`;
   window.open(wa,'_blank','noopener');
  });
  /* aparecer al hacer scroll */
