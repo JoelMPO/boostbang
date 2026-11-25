@@ -294,9 +294,60 @@ footer{background:var(--deep);border-top:1px solid var(--bd);padding:64px 0 28px
 </style>
 <link rel="icon" type="image/png" href="assets/img/favicon.png">
 <link rel="apple-touch-icon" href="assets/img/favicon.png">
+<style>.dsec{margin-top:60px;padding:clamp(18px,3vw,32px);border:1px solid var(--bd);background:linear-gradient(135deg,#141414,#0b0b0b)}
+.dhead{display:flex;justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.dctl{display:flex;gap:8px;align-items:center}
+.dnav{width:48px;height:48px;border:1px solid #333;background:#111;color:var(--tx);font:700 24px var(--hd);cursor:pointer;transition:border-color .2s,color .2s,transform .15s}
+.dnav:hover{border-color:var(--y);color:var(--y)}.dnav:active{transform:scale(.92)}
+.dtrack{display:grid;grid-auto-flow:column;grid-auto-columns:clamp(170px,22vw,250px);gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;padding:26px 2px 8px;scrollbar-width:thin;scrollbar-color:#E10600 #1a1a1a}
+.dtrack::-webkit-scrollbar{height:6px}.dtrack::-webkit-scrollbar-thumb{background:#E10600}
+.dtrack .dz{scroll-snap-align:start}
+.dz .badge{position:absolute;top:10px;left:10px;z-index:1;background:rgba(0,0,0,.75);color:#fff;font:700 12px var(--hd);letter-spacing:.12em;padding:3px 8px;border:1px solid #333}
+.dz small{color:var(--mu)!important}
+#dlib{position:fixed;inset:0;z-index:150;background:rgba(5,5,5,.97);backdrop-filter:blur(6px);overflow-y:auto;padding:0 clamp(16px,4vw,48px) 60px}
+#dlib[hidden]{display:none}
+.dl-top{position:sticky;top:0;z-index:2;display:flex;align-items:center;gap:18px;padding:16px 0;background:rgba(5,5,5,.95);border-bottom:1px solid #222;margin-bottom:22px}
+.dl-top b{font:800 26px var(--hd);text-transform:uppercase;letter-spacing:.03em;display:block}
+.dl-top span{color:var(--mu);font-size:14px}
+.dl-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:14px}
+#lb{z-index:200}
+.qa{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:70px}
+@media(max-width:900px){.qa{grid-template-columns:1fr 1fr}}
+.qa-c{position:relative;display:flex;flex-direction:column;gap:6px;padding:26px 22px 54px;border:1px solid var(--bd);background:linear-gradient(160deg,#151515,#0b0b0b);text-decoration:none;overflow:hidden;min-height:170px;transition:border-color .3s,box-shadow .3s}
+.qa-c::before{content:"";position:absolute;inset:auto -30% -70% auto;width:90%;aspect-ratio:1;background:radial-gradient(circle,rgba(225,6,0,.22),transparent 60%);opacity:0;transition:opacity .4s}
+.qa-c:hover{border-color:var(--y);box-shadow:0 20px 40px rgba(0,0,0,.5)}.qa-c:hover::before{opacity:1}
+.qa-n{font:800 15px var(--hd);color:var(--y);letter-spacing:.2em}
+.qa-c b{font:800 clamp(26px,2.6vw,34px)/1 var(--hd);text-transform:uppercase}
+.qa-c small{color:var(--mu);font-size:14px}
+.qa-c i{position:absolute;right:20px;bottom:16px;font:700 26px var(--hd);font-style:normal;color:#555;transition:transform .3s,color .3s}
+.qa-c:hover i{transform:translateX(6px);color:var(--y)}
+.qa-c.hot{border-color:#3a0a08;background:linear-gradient(160deg,#250505,#0b0b0b)}
+.bbg-mini{padding:4%;border-radius:50%;background:radial-gradient(circle at 30% 25%,#3c3c3c,#111 55%,#050505);box-shadow:0 30px 70px rgba(0,0,0,.7),0 0 80px rgba(225,6,0,.18)}
+</style>
 <link rel="stylesheet" href="assets/css/fx.css">
 </head>
 <body>
+<div id="bb-load" role="status" aria-label="Cargando BoostBang">
+ <div class="in">
+  <svg viewBox="0 0 320 230" aria-hidden="true">
+   <circle cx="160" cy="160" r="100" fill="none" stroke="#1c1c1c" stroke-width="12" stroke-dasharray="471 1000" transform="rotate(135 160 160)"/>
+   <circle cx="160" cy="160" r="100" fill="none" stroke="#3a0a08" stroke-width="12" stroke-dasharray="67 1000" stroke-dashoffset="-404" transform="rotate(135 160 160)"/>
+   <circle class="arc" cx="160" cy="160" r="100" fill="none" stroke="#E10600" stroke-width="12" transform="rotate(135 160 160)"/>
+   <g class="ndl"><line x1="160" y1="160" x2="160" y2="78" stroke="#fff" stroke-width="4" stroke-linecap="round"/></g>
+   <circle cx="160" cy="160" r="9" fill="#E10600"/>
+   <text x="160" y="214" text-anchor="middle" fill="#fff" font-family="Barlow Condensed,Arial Narrow,sans-serif" font-weight="800" font-size="34" id="bb-rpm">0</text>
+  </svg>
+  <img class="lg" src="assets/img/logoWhite.webp" alt="">
+  <div class="boost"><i></i></div>
+  <div class="tx">Arrancando motor</div>
+ </div>
+</div>
+<script>(function(){var L=document.getElementById('bb-load'),r=document.getElementById('bb-rpm'),t0=performance.now(),seen=false;
+try{seen=sessionStorage.getItem('bbl')==='1';sessionStorage.setItem('bbl','1')}catch(e){}
+var min=seen?450:1350;(function c(n){var p=Math.min(1,(n-t0)/1250);r.textContent=Math.round(7000*(1-Math.pow(1-p,3))).toLocaleString('en-US')+' RPM';if(p<1)requestAnimationFrame(c)})(t0);
+function done(){var w=Math.max(0,min-(performance.now()-t0));setTimeout(function(){L.classList.add('done');setTimeout(function(){L.remove()},700)},w)}
+if(document.readyState==='complete')done();else addEventListener('load',done);setTimeout(done,4500)})();</script>
+
 <a href="#main" style="position:absolute;left:-999px" onfocus="this.style.left='8px'" onblur="this.style.left='-999px'">Saltar al contenido</a>
 <header>
  <div class="wrap bar">
@@ -320,16 +371,23 @@ footer{background:var(--deep);border-top:1px solid var(--bd);padding:64px 0 28px
  <div class="scroll" aria-hidden="true"></div>
 </section>
 
+<div class="ticker" aria-hidden="true"><div class="tr"><span>Drift</span><span>Tuning</span><span>Boost</span><span>Proyectos</span><span>Comunidad</span><span>BB Gauges</span><span>Merch</span><span>Car Shots</span><span>Drift</span><span>Tuning</span><span>Boost</span><span>Proyectos</span><span>Comunidad</span><span>BB Gauges</span><span>Merch</span><span>Car Shots</span></div></div>
 <section id="intro"><div class="wrap">
  <div class="intro-top"><h2 data-t="introTitle">Más que máquinas. Una forma de vida.</h2>
  <p data-t="introText">BoostBang nace de nuestra pasión por los autos y todo lo que pasa a su alrededor. Desde proyectos armados pieza por pieza hasta encuentros, fotografía y nuevas amistades, celebramos la cultura que nos mueve.</p></div>
  <div class="themes" id="themes"></div>
+ <div class="qa" id="qa">
+  <a href="#gallery" class="qa-c" data-tilt><span class="qa-n">01</span><b>Galería</b><small>Car shots de eventos, drift y proyectos</small><i aria-hidden="true">→</i></a>
+  <a href="#builds" class="qa-c" data-tilt><span class="qa-n">02</span><b>Proyectos</b><small>Los autos y sus historias</small><i aria-hidden="true">→</i></a>
+  <a href="#merch" class="qa-c" data-tilt><span class="qa-n">03</span><b>Merch</b><small>Camisetas, diseños y llaveros</small><i aria-hidden="true">→</i></a>
+  <a href="gauges.html" class="qa-c hot" data-tilt><span class="qa-n">04</span><b>BB Gauges</b><small>El gauge digital de BoostBang</small><i aria-hidden="true">→</i></a>
+ </div>
 </div></section>
 <section id="bbg-teaser" class="bbg-t"><div class="wrap bbg-in">
  <div class="bbg-copy"><p class="eyebrow">Nuevo · Preventa</p><h2 data-t="gaugesTitle">BB Gauges</h2>
  <p class="sub" data-t="gaugesText">Gauge digital que se conecta al OBD-II de tu carro: RPM con luz de cambio, boost, AFR, temperaturas y el logo de tu auto al encender.</p>
  <div class="ctas"><a class="btn" href="gauges.html">Conócelo</a><a class="btn ghost" href="gauges.html#reservar">Reservar el mío</a></div></div>
- <a class="bbg-mini" href="gauges.html" aria-label="Ver BB Gauges"><svg viewBox="0 0 480 480" id="mini-g" role="img" aria-label="Gauge BB animado"></svg></a>
+ <a class="bbg-mini" href="gauges.html" aria-label="Ver BB Gauges" data-tilt><svg viewBox="0 0 480 480" id="mini-g" role="img" aria-label="Gauge BB animado"></svg></a>
 </div></section>
 <section id="reviews" class="rev" hidden><div class="wrap">
  <h2 data-t="reviewsTitle">Lo que dice la comunidad.</h2>
@@ -338,6 +396,7 @@ footer{background:var(--deep);border-top:1px solid var(--bd);padding:64px 0 28px
 </div>
 
 <section id="gallery" class="tab" data-tab="gallery" hidden><div class="wrap">
+ <a class="back" href="#home">Inicio</a>
  <h2 data-t="galleryTitle">Car Shots.</h2>
  <p class="sub" data-t="galleryText">Cada auto tiene una historia. Cada proyecto tiene identidad.</p>
  <div class="filters" id="filters" role="group" aria-label="Filtrar galería"></div>
@@ -345,11 +404,13 @@ footer{background:var(--deep);border-top:1px solid var(--bd);padding:64px 0 28px
 </div></section>
 
 <section id="builds" class="tab" data-tab="builds" hidden><div class="wrap">
+ <a class="back" href="#home">Inicio</a>
  <h2 data-t="buildsTitle">Pasión por los motores.</h2>
  <div id="build-list"></div>
 </div></section>
 
 <section id="merch" class="tab" data-tab="merch" hidden><div class="wrap">
+ <a class="back" href="#home">Inicio</a>
  <h2 data-t="merchTitle">Representa la cultura.</h2>
  <p class="sub" data-t="merchText">Lleva BoostBang contigo. Merch inspirado en los autos, la cultura urbana y todo lo que nos mueve.</p>
  <div class="shirts" id="camisetas">
@@ -357,19 +418,22 @@ footer{background:var(--deep);border-top:1px solid var(--bd);padding:64px 0 28px
    <h3 class="sh">Camisetas</h3>
   </div>
   <div id="custom"></div>
+  <div class="dsec" id="designs">
+   <div class="dhead"><div><p class="eyebrow" style="margin:0 0 8px">Opción 2 · Diseños listos</p><h3 class="sh sh2" style="margin:0" data-t="designsTitle">Catálogo de diseños</h3>
+    <p class="sub" style="margin-top:10px" data-t="designsText">Desliza, elige tu favorito y pídelo con su código por WhatsApp.</p></div>
+    <div class="dctl"><button type="button" class="dnav" id="dprev" aria-label="Diseños anteriores">‹</button><button type="button" class="dnav" id="dnext" aria-label="Más diseños">›</button><button type="button" class="btn" id="dall">Ver todos</button></div></div>
+   <div class="dtrack" id="dgrid" tabindex="0" aria-label="Carrusel de diseños"></div>
+  </div>
   <ul class="facts" id="facts"></ul>
   <div class="prods" id="prods"></div>
   <div class="ly"><h3 class="sh sh2">Los Yectos</h3><div class="prods" id="prods-ly"></div></div>
   <div class="ly" id="kc"></div>
-  <div class="ly" id="designs"><h3 class="sh sh2" data-t="designsTitle">Catálogo de diseños</h3>
-   <p class="sub" data-t="designsText">Elige un diseño, anota su código y pídelo en tu camiseta por WhatsApp.</p>
-   <div class="filters" id="dfilters" role="group" aria-label="Filtrar diseños"></div>
-   <div class="dgrid" id="dgrid"></div></div>
  </div>
  <div class="setup" id="wa-setup" hidden>Falta configurar: agrega el número de WhatsApp en CONFIG.whatsapp (código de país, solo dígitos) para activar los pedidos.</div>
 </div></section>
 
 <section id="community" class="tab" data-tab="community" hidden><div class="wrap com">
+ <a class="back" href="#home">Inicio</a>
  <div><h2 data-t="communityTitle">La cultura la construimos entre todos.</h2>
  <p class="sub" data-t="communityText">Cada proyecto tiene una historia. Queremos escuchar la tuya. Síguenos, comparte tu proyecto y sé parte de la comunidad BoostBang.</p>
  <div class="ctas"><a class="btn" id="share-cta" href="#community">Comparte tu proyecto</a></div></div>
@@ -388,6 +452,10 @@ footer{background:var(--deep);border-top:1px solid var(--bd);padding:64px 0 28px
  <div class="copy">© <span id="yr"></span> BoostBang. Todos los derechos reservados.</div>
 </div></footer>
 
+<div id="dlib" role="dialog" aria-modal="true" aria-label="Librería de diseños" hidden>
+ <div class="dl-top"><button type="button" class="back" id="dlx" style="margin:0">Volver</button><div><b>Librería de diseños</b><span id="dlc"></span></div></div>
+ <div class="dl-grid" id="dlg"></div>
+</div>
 <div id="lb" role="dialog" aria-modal="true" aria-label="Visor de galería" aria-hidden="true">
  <button class="lb-btn" id="lbx" aria-label="Cerrar">✕</button>
  <button class="lb-btn" id="lbp" aria-label="Anterior">‹</button>
@@ -519,7 +587,7 @@ const CONFIG = {
   shirt: {price:25, sizes:["S","M","L","XL","XXL","XXXL"], gift:"Souvenir incluido", colors:[{name:"Negro",css:"#0b0b0b"},{name:"Blanco",css:"#f5f5f5"},{name:"Tie Dye",css:"conic-gradient(from 30deg,#ff2d95,#ffd400,#39e75f,#27c4ff,#8a4dff,#ff2d95)"}]},   // precio en USD · tallas unisex
   custom: {name:"Custom Tshirt", lead:"Tu auto, tu camiseta", img:IMG.custom, alt:"Cartel Custom Design: de la foto de un auto a su ilustración, junto a varios diseños de autos tuner",
     steps:["Mándanos por WhatsApp una foto de tu auto.","Te enviamos 3 diseños basados en tu auto.","Tú eliges el que más te guste y lo llevamos a tu camiseta."],
-    alt2:"¿Prefieres algo ya listo? Tenemos más de 300 diseños. Te enviamos el link por WhatsApp para que elijas el tuyo.",
+    alt2:"¿Prefieres algo ya listo? Mira el catálogo de diseños aquí abajo: elige el tuyo y pídelo con su código.",
     ctaPhoto:"Enviar la foto de mi auto", msgPhoto:"¡Hola BoostBang! Quiero una Custom Tshirt. Les paso la foto de mi auto.",
     ctaDesigns:"Ver los +300 diseños", msgDesigns:"¡Hola BoostBang! Quiero ver los más de 300 diseños para elegir mi camiseta."},
   keychain: {name:"Llaveros", price:3.5, desc:"Llaveros con los diseños de BoostBang y Los Yectos.", msg:"¡Hola BoostBang! Me interesan los llaveros ($3.50). ¿Me confirman disponibilidad?",
@@ -571,7 +639,7 @@ $$("#nav a").forEach(a=>a.addEventListener("click",()=>setMenu(false)));
 /* hero */
 $("#hero-bg").innerHTML=CONFIG.heroImage?`<img src="${esc(CONFIG.heroImage)}" alt="${esc(CONFIG.heroAlt)}" style="object-position:${CONFIG.heroPos||'50% 50%'}" fetchpriority="high">`:`<div class="ph" role="img" aria-label="Hero photograph placeholder">Foto de portada: configura CONFIG.heroImage</div>`;
 /* themes */
-$("#themes").innerHTML=CONFIG.themes.map(t=>`<article class="theme">${pic(t.img,t.alt,t.t+" photo",true,t.pos)}<div><h3>${t.t}</h3><p>${t.d}</p></div></article>`).join("");
+$("#themes").innerHTML=CONFIG.themes.map(t=>`<article class="theme" data-tilt>${pic(t.img,t.alt,t.t+" photo",true,t.pos)}<div><h3>${t.t}</h3><p>${t.d}</p></div></article>`).join("");
 /* gallery */
 let cur="Todo",list=[],idx=0,cl=[];
 const fb=$("#filters");
@@ -599,7 +667,7 @@ function showLb(){
   $("#lbt").textContent=it.title;$("#lbc").textContent=`${it.cat} · ${idx+1}/${cl.length}`;
 }
 function openLb(i,from,L){$("#lbp").hidden=$("#lbn").hidden=false;cl=L||list;idx=i;opener=from;showLb();lb.classList.add("open");lb.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";$("#lbx").focus()}
-function closeLb(){const v=$("video",lb);if(v)v.pause();lb.classList.remove("open");lb.setAttribute("aria-hidden","true");document.body.style.overflow="";lbm.innerHTML="";opener&&opener.focus()}
+function closeLb(){const v=$("video",lb);if(v)v.pause();lb.classList.remove("open");lb.setAttribute("aria-hidden","true");document.body.style.overflow=document.getElementById("dlib").hidden?"":"hidden";lbm.innerHTML="";opener&&opener.focus()}
 const step=d=>{if(!cl.length)return;idx=(idx+d+cl.length)%cl.length;showLb()};
 $("#lbx").onclick=closeLb;$("#lbp").onclick=()=>step(-1);$("#lbn").onclick=()=>step(1);
 lb.addEventListener("click",e=>{if(e.target===lbm||e.target===lb)closeLb()});
@@ -637,7 +705,7 @@ $("#prods-ly").innerHTML=CONFIG.products.map((p,i)=>p.group==="Los Yectos"?card(
 
 const waBtn=(label,msg,cls="")=>waOk?`<a class="btn ${cls}" target="_blank" rel="noopener" href="${waLink(msg)}">${label}</a>`:`<a class="btn ${cls}" aria-disabled="true" href="#wa-setup">WhatsApp sin configurar</a>`;
 const CU=CONFIG.custom;
-$("#custom").innerHTML=`<article class="custom">${pic(CU.img,CU.alt,"Custom Tshirt")}<div class="in"><h3>${esc(CU.name)}</h3><p class="lead2">${esc(CU.lead)}</p><ol class="steps">${CU.steps.map(t=>`<li>${esc(t)}</li>`).join("")}</ol><p class="alt2">${esc(CU.alt2)}</p><div class="ctas">${waBtn(esc(CU.ctaPhoto),CU.msgPhoto)}${waBtn(esc(CU.ctaDesigns),CU.msgDesigns,"ghost")}</div></div></article>`;
+$("#custom").innerHTML=`<article class="custom">${pic(CU.img,CU.alt,"Custom Tshirt")}<div class="in"><h3>${esc(CU.name)}</h3><p class="lead2">${esc(CU.lead)}</p><ol class="steps">${CU.steps.map(t=>`<li>${esc(t)}</li>`).join("")}</ol><p class="alt2">${esc(CU.alt2)}</p><div class="ctas">${waBtn(esc(CU.ctaPhoto),CU.msgPhoto)}<a class="btn ghost" href="#designs" data-go-designs>Ver catálogo</a></div></div></article>`;
 const carHTML=(sl,label,cls="")=>{const multi=sl.length>1;return `<div class="car ${cls}" role="group" aria-roledescription="carrusel" aria-label="${esc(label)}"><div class="cview"><div class="ctrack" ${multi?'tabindex="0"':''}>${sl.map((x,k)=>`<figure class="cslide" ${multi?`aria-label="Foto ${k+1} de ${sl.length}"`:""}><img src="${esc(x.img)}" alt="${esc(x.alt)}" ${k?'loading="lazy"':''} ${x.pos?`style="object-position:${x.pos}"`:""} decoding="async"></figure>`).join("")}</div>${multi?`<button type="button" class="cbtn prev" aria-label="Foto anterior">‹</button><button type="button" class="cbtn next" aria-label="Foto siguiente">›</button><span class="ccount" aria-live="polite">1 / ${sl.length}</span>`:""}</div>${multi?`<div class="cthumbs">${sl.map((x,k)=>`<button type="button" aria-label="Ver foto ${k+1}" ${k?"":'aria-current="true"'}><img src="${esc(x.img)}" alt="" loading="lazy" ${x.pos?`style="object-position:${x.pos}"`:""}></button>`).join("")}</div>`:""}</div>`};
 const KC=CONFIG.keychain;
 $("#kc").innerHTML=`<h3 class="sh sh2">${esc(KC.name)}</h3><article class="kc">${carHTML(KC.slides,"Fotos de los llaveros","c32")}<div class="in"><div class="pr"><span class="price">$${KC.price.toFixed(2)}</span></div><p>${esc(KC.desc)}</p>${waBtn("Pedir por WhatsApp",KC.msg)}</div></article>`;
@@ -700,16 +768,23 @@ $$("[data-t]").forEach(e=>{const v=CONFIG.texts&&CONFIG.texts[e.dataset.t];if(v)
 /* reseñas */
 if(CONFIG.reviews&&CONFIG.reviews.length){$("#reviews").hidden=false;
  $("#revs").innerHTML=CONFIG.reviews.map(r=>`<article class="rv"><span class="st" aria-label="${r.stars||5} de 5 estrellas">${"★".repeat(r.stars||5)}${"☆".repeat(5-(r.stars||5))}</span><p>“${esc(r.text)}”</p><div><b>${esc(r.name)}</b>${r.car?`<br><small>${esc(r.car)}</small>`:""}</div></article>`).join("")}
-/* catálogo de diseños: vista previa con marca de agua, sin descarga */
-const DS=CONFIG.designs||[];let dcur="Todos";
-const dmakes=["Todos",...new Set(DS.map(d=>d.make))];
-$("#dfilters").innerHTML="";dmakes.forEach(m=>{const b=el("button",{type:"button","aria-pressed":m==="Todos"},m);b.onclick=()=>{dcur=m;$$("button",$("#dfilters")).forEach(x=>x.setAttribute("aria-pressed",x===b));renderD()};$("#dfilters").append(b)});
-function renderD(){const L=DS.filter(d=>dcur==="Todos"||d.make===dcur);
- $("#dgrid").innerHTML=L.map(d=>`<button type="button" class="dz" data-c="${esc(d.code)}" aria-label="Ver diseño ${esc(d.name)}, código ${esc(d.code)}"><img src="${esc(d.img)}" alt="Diseño ${esc(d.name)}" loading="lazy" draggable="false"><span>${esc(d.name)}</span><small>${esc(d.code)}</small></button>`).join("");
- $$(".dz").forEach(b=>b.onclick=()=>{const d=DS.find(x=>x.code===b.dataset.c);
+/* catálogo de diseños: carrusel + librería, vista previa con marca de agua, sin descarga */
+const DS=CONFIG.designs||[];
+const dcard=(d,i)=>`<button type="button" class="dz" data-i="${i}" aria-label="Ver diseño ${esc(d.name)}, código ${esc(d.code)}"><span class="badge">${esc(d.code)}</span><img src="${esc(d.img)}" alt="Diseño ${esc(d.name)}" loading="lazy" draggable="false"><span>${esc(d.name)}</span><small>${esc(d.make||"")}</small></button>`;
+function openD(i,from){const d=DS[i];
   lbm.innerHTML=`<div class="dpick"><img src="${esc(d.img)}" alt="Diseño ${esc(d.name)}" draggable="false">${waBtn("Pedir este diseño · "+esc(d.code),"¡Hola BoostBang! Quiero una camiseta con el diseño "+d.code+" ("+d.name+"). ¿Me pasan tallas y precio?")}</div>`;
-  $("#lbt").textContent=d.name;$("#lbc").textContent=d.code;lb.classList.add("open");lb.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";cl=[];opener=b;$("#lbp").hidden=$("#lbn").hidden=true;$("#lbx").focus()});}
-renderD();
+  $("#lbt").textContent=d.name;$("#lbc").textContent=d.code;lb.classList.add("open");lb.setAttribute("aria-hidden","false");document.body.style.overflow="hidden";cl=[];opener=from;$("#lbp").hidden=$("#lbn").hidden=true;$("#lbx").focus()}
+$("#dgrid").innerHTML=DS.map(dcard).join("");$("#dlg").innerHTML=DS.map(dcard).join("");
+$("#dall").textContent=`Ver todos (${DS.length})`;$("#dlc").textContent=`${DS.length} diseños · toca uno para verlo y pedirlo`;
+document.addEventListener("click",e=>{const b=e.target.closest(".dz");if(b)openD(+b.dataset.i,b)});
+const dtr=$("#dgrid"),dstep=()=>{const f=dtr.firstElementChild;return f?(f.offsetWidth+14)*2:400};
+$("#dprev").onclick=()=>dtr.scrollBy({left:-dstep(),behavior:"smooth"});$("#dnext").onclick=()=>dtr.scrollBy({left:dstep(),behavior:"smooth"});
+const dlib=$("#dlib");
+$("#dall").onclick=()=>{dlib.hidden=false;document.body.style.overflow="hidden";$("#dlx").focus()};
+const closeLib=()=>{dlib.hidden=true;document.body.style.overflow="";$("#dall").focus()};
+$("#dlx").onclick=closeLib;
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&!dlib.hidden&&!lb.classList.contains("open"))closeLib()});
+document.addEventListener("click",e=>{const a=e.target.closest("[data-go-designs]");if(a){e.preventDefault();e.stopPropagation();$("#designs").scrollIntoView({behavior:"smooth",block:"start"})}},true);
 document.addEventListener("contextmenu",e=>{if(e.target.closest(".dz,.dpick"))e.preventDefault()});
 });
 </script>
