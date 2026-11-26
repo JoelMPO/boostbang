@@ -1,0 +1,321 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0B0B0B">
+<title>BB Gauges · Configuración</title>
+<link rel="icon" href="data:,">
+<style>
+/* Sin fuentes externas: dentro del gauge no hay internet */
+:root{--bg:#0B0B0B;--card:#141414;--bd:#242424;--tx:#F2EFE8;--mu:#A39E93;--y:#E10600;--yt:#FF5A4F;--ok:#22C55E;--hd:"Barlow Condensed","Oswald","Arial Narrow",Impact,sans-serif}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+button,input,select{font:inherit;color:inherit}
+.app{max-width:460px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;padding-bottom:110px}
+header{display:flex;align-items:center;justify-content:space-between;padding:16px 18px 8px;gap:10px}
+.brand b{display:block;font:italic 800 25px/1 var(--hd);letter-spacing:.02em}
+.brand span{display:block;font:700 12px/1 var(--hd);letter-spacing:.32em;color:var(--yt);margin-top:5px}
+.pill{display:flex;align-items:center;gap:8px;border:1px solid var(--bd);border-radius:999px;padding:7px 12px;font-size:12px;color:#CFCAC0;white-space:nowrap}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--ok)}.dot.demo{background:#FFB24D}
+.demo-bar{margin:4px 18px 0;padding:10px 12px;border:1px solid #3a2a00;background:#1a1200;border-radius:12px;font-size:13px;color:#FFD48A;display:none}
+.demo .demo-bar{display:block}
+.prev{margin:10px 18px 0;border:1px solid #222;border-radius:18px;background:radial-gradient(circle at 50% 40%,#1A1A1A,#0E0E0E 70%);padding:16px 10px 12px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.prow{display:flex;align-items:center;gap:8px;width:100%;justify-content:center}
+.nav{width:44px;height:44px;flex:none;border-radius:50%;border:1px solid #2A2A2A;background:#111;font-size:20px;cursor:pointer}
+#gauge{width:min(64vw,250px);height:auto;transition:filter .2s}
+#panel{width:100%;max-width:340px;height:auto;display:none}
+.isX #gauge{display:none}.isX #panel{display:block}.isX .nav{display:none}
+.flash{animation:fl .45s steps(2) infinite}@keyframes fl{50%{opacity:.3}}
+.pmeta{display:flex;gap:8px;align-items:center;font-size:13px;color:#CFCAC0;flex-wrap:wrap;justify-content:center}
+.badge{background:#2A1A00;color:#FFB24D;border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700}
+.mini{border:1px solid #333;background:none;border-radius:999px;padding:6px 12px;font-size:12px;cursor:pointer;min-height:34px}
+.tabs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;margin:14px 18px 0;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:4px;position:sticky;top:0;z-index:5}
+.tabs button{min-height:44px;border:0;border-radius:9px;background:none;color:#CFCAC0;font:700 13px var(--hd);letter-spacing:.02em;text-transform:uppercase;cursor:pointer;padding:0 2px}
+.tabs button[aria-selected=true]{background:var(--y);color:#fff}
+section{padding:18px;display:none;flex-direction:column;gap:18px}section.on{display:flex}
+h3{margin:0 0 10px;font:700 13px var(--hd);letter-spacing:.14em;color:var(--mu);display:flex;justify-content:space-between}
+h3 b{color:var(--tx)}
+.sw{display:flex;gap:10px;flex-wrap:wrap}
+.sw button{width:44px;height:44px;border-radius:50%;border:3px solid var(--bg);cursor:pointer}
+.sw button[aria-pressed=true]{border-color:#fff;box-shadow:0 0 0 2px var(--c)}
+.seg{display:flex;background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:3px}
+.seg button{flex:1;min-height:40px;border:0;border-radius:8px;background:none;color:#CFCAC0;font-weight:600;cursor:pointer}
+.seg button[aria-pressed=true]{background:var(--y);color:#fff}
+.g2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+input[type=range]{width:100%;accent-color:var(--y);height:28px}
+input[type=checkbox]{width:22px;height:22px;accent-color:var(--y)}
+.card{border:1px solid #222;background:#121212;border-radius:14px;padding:14px;display:flex;flex-direction:column;gap:12px}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;min-height:44px}
+.logo{width:60px;height:60px;border-radius:50%;border:2px dashed #444;display:grid;place-items:center;font-size:10px;color:var(--mu);font-weight:700;overflow:hidden;flex:none;background:#000}
+.logo img{width:100%;height:100%;object-fit:contain}
+.btn2{display:flex;align-items:center;justify-content:center;min-height:44px;border:1px solid #333;border-radius:10px;background:none;cursor:pointer;font-weight:600;text-decoration:none;color:var(--tx)}
+.mlist{display:flex;flex-direction:column;gap:8px}
+.mi{display:flex;align-items:center;gap:10px;border:1px solid #222;background:#121212;border-radius:12px;padding:6px 12px}
+.mi.cur{border-color:var(--y)}
+.mi button{flex:1;text-align:left;background:none;border:0;cursor:pointer;min-height:48px;padding:0}
+.mi b{display:block;font:700 18px var(--hd);letter-spacing:.06em}.mi small{color:var(--mu)}
+.mi label{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--mu)}
+.skins{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.sk{display:flex;flex-direction:column;align-items:center;gap:7px;padding:14px 8px;border-radius:14px;background:#121212;border:2px solid #222;cursor:pointer}
+.sk[aria-pressed=true]{border-color:var(--y)}
+.sk i{width:72px;height:72px;border-radius:50%;border:3px solid #333;display:grid;place-items:center;font:normal 800 20px var(--hd)}
+.sk b{font:700 16px var(--hd);letter-spacing:.04em}.sk small{font-weight:600;color:var(--mu)}.sk small.p{color:#FFB24D}
+.code{display:flex;gap:8px}.code input{flex:1;min-height:44px;border-radius:10px;border:1px solid #333;background:#0E0E0E;padding:0 12px;text-transform:uppercase;letter-spacing:.1em}
+.foot{position:fixed;left:0;right:0;bottom:0;padding:14px 18px calc(16px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(11,11,11,0),#0B0B0B 30%);display:flex;justify-content:center;z-index:9}
+.foot>div{width:100%;max-width:424px;display:flex;flex-direction:column;gap:8px}
+.big{min-height:52px;border:0;border-radius:12px;background:var(--y);color:#fff;cursor:pointer;font:800 18px var(--hd);letter-spacing:.1em;text-decoration:none;display:flex;align-items:center;justify-content:center}
+.big.wa{background:#25D366;color:#06140B}.big:disabled{opacity:.5}
+.hint{text-align:center;font-size:12px;color:var(--mu)}
+#toast{position:fixed;left:50%;top:16px;transform:translate(-50%,-140%);transition:transform .3s;background:#111;border:1px solid #333;border-radius:12px;padding:12px 16px;z-index:20;font-weight:600;max-width:90vw}
+#toast.on{transform:translate(-50%,0)}
+.boot{position:absolute;inset:0;display:none}
+</style>
+</head>
+<body>
+<div class="app" id="app">
+<header>
+ <div class="brand"><b>BOOST BANG</b><span>BB GAUGES</span></div>
+ <div class="pill"><span class="dot" id="dot"></span><span id="conn">Conectando…</span></div>
+</header>
+<div class="demo-bar" id="demoBar"><a href="/gauges.html" style="display:inline-block;margin-bottom:6px;color:#FFD48A;font-weight:700">← Volver a BB Gauges</a><br>Modo demo: así se configura tu BB Gauge desde el celular. Los cambios no se guardan.
+ <div class="seg" style="margin-top:8px" role="group" aria-label="Modelo"><button type="button" data-model="R" aria-pressed="true">R-Model 52 mm</button><button type="button" data-model="X" aria-pressed="false">X-Model panel</button></div>
+</div>
+
+<div class="prev" id="prev">
+ <div class="prow">
+  <button class="nav" type="button" id="prevG" aria-label="Medidor anterior">‹</button>
+  <svg id="gauge" viewBox="0 0 240 240" role="img" aria-label="Vista previa del gauge"></svg>
+  <svg id="panel" viewBox="0 0 400 240" role="img" aria-label="Vista previa del panel"></svg>
+  <button class="nav" type="button" id="nextG" aria-label="Medidor siguiente">›</button>
+ </div>
+ <div class="pmeta"><span>Skin: <b id="skinName">Clásico</b></span><span class="badge" id="lockBadge" hidden>VISTA PREVIA</span><button class="mini" type="button" id="bootBtn">Ver arranque</button></div>
+</div>
+
+<nav class="tabs" role="tablist">
+ <button role="tab" aria-selected="true" data-tab="ap">Estilo</button>
+ <button role="tab" aria-selected="false" data-tab="me">Medidores</button>
+ <button role="tab" aria-selected="false" data-tab="al">Alertas</button>
+ <button role="tab" aria-selected="false" data-tab="sk">Skins</button>
+</nav>
+
+<section id="t-ap" class="on">
+ <div><h3>COLOR DE ACENTO</h3><div class="sw" id="colors"></div></div>
+ <div><h3>UNIDADES</h3><div class="g2">
+  <div class="seg"><button type="button" data-u="psi">psi</button><button type="button" data-u="bar">bar</button></div>
+  <div class="seg"><button type="button" data-t="C">°C</button><button type="button" data-t="F">°F</button></div></div></div>
+ <label><h3>BRILLO <b id="brightV"></b></h3><input type="range" id="bright" min="10" max="100"></label>
+ <label class="row"><span>Bajar brillo de noche (con las luces del carro)</span><input type="checkbox" id="night"></label>
+ <div class="card">
+  <h3 style="margin:0">ARRANQUE</h3>
+  <div class="row" style="justify-content:flex-start"><div class="logo" id="logoPrev">TU LOGO</div><div><b>Logo de tu carro o club</b><br><small style="color:var(--mu)">PNG sin fondo, cuadrado. Sale al encender, antes de BoostBang.</small></div></div>
+  <label class="btn2">Subir logo<input type="file" id="logoIn" accept="image/png,image/jpeg" hidden></label>
+  <label class="row"><span>Mostrar arranque al encender</span><input type="checkbox" id="bootOn"></label>
+ </div>
+</section>
+
+<section id="t-me">
+ <p style="margin:0;color:#CFCAC0" id="meHelp">Elige qué medidores aparecen al deslizar el dedo. Toca uno para que sea el que sale al encender.</p>
+ <div class="mlist" id="mlist"></div>
+</section>
+
+<section id="t-al">
+ <p style="margin:0;color:#CFCAC0">Mueve los valores y mira el gauge: flashea en <b style="color:#4ADE80">verde</b> para cambiar de marcha y en <b style="color:var(--yt)">rojo</b> cuando algo se pasa.</p>
+ <label><h3>LUZ DE CAMBIO <b id="shiftV"></b></h3><input type="range" id="shift" min="3000" max="8000" step="100"></label>
+ <label><h3>BOOST MÁXIMO <b id="boostV"></b></h3><input type="range" id="boostMax" min="5" max="35" step="0.5"></label>
+ <label><h3>TEMPERATURA DE AGUA <b id="waterV"></b></h3><input type="range" id="waterMax" min="85" max="120" step="1"></label>
+ <label><h3>TEMPERATURA DE ACEITE <b id="oilV"></b></h3><input type="range" id="oilMax" min="100" max="150" step="1"></label>
+ <label><h3>AFR MÁS POBRE <b id="afrV"></b></h3><input type="range" id="afrMax" min="11" max="15" step="0.1"></label>
+ <label class="row" style="border-top:1px solid #222"><span>Flash de pantalla en las alertas</span><input type="checkbox" id="flashOn"></label>
+</section>
+
+<section id="t-sk">
+ <div class="skins" id="skins"></div>
+ <div class="card" id="codeCard">
+  <h3 style="margin:0">¿YA COMPRASTE UN SKIN?</h3>
+  <div class="code"><input id="code" placeholder="CÓDIGO" maxlength="12" autocomplete="off" aria-label="Código de activación"><button class="btn2" type="button" id="codeBtn" style="padding:0 16px">Activar</button></div>
+  <small style="color:var(--mu)">Serie de este gauge: <b id="serial">—</b></small>
+ </div>
+</section>
+</div>
+
+<div class="foot"><div id="foot"></div></div>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* ===== Datos fijos ===== */
+const WA="50769502405";
+const COLORS=[["Rojo","#E10600"],["Naranja","#FF7A00"],["Azul","#2F7BFF"],["Turquesa","#1FB8A6"],["Lila","#B57BFF"],["Hueso","#EDE6D6"]];
+const SKINS=[
+ {id:"clasico",name:"Clásico",face:"#0E0E0E",track:"#262626",tick:"#F2EFE8",txt:"#FFFFFF",sub:"#A39E93",ring:"#2A2A2A",price:0},
+ {id:"carbono",name:"Carbono",face:"url(#carbon)",track:"#2E2E2E",tick:"#DADADA",txt:"#FFFFFF",sub:"#B5B0A6",ring:"#3A3A3A",price:0,css:"repeating-linear-gradient(45deg,#161616 0 4px,#232323 4px 8px)"},
+ {id:"minimal",name:"Minimal",face:"#000000",track:"#1A1A1A",tick:"#555555",txt:"#FFFFFF",sub:"#8A857B",ring:"#111111",price:0},
+ {id:"retro",name:"Retro hueso",face:"#EDE6D6",track:"#CFC6B2",tick:"#1A1A1A",txt:"#111111",sub:"#4A463F",ring:"#B9AF98",price:0},
+ {id:"jdm",name:"JDM Night",face:"#14061A",track:"#2B1033",tick:"#FF4FA3",txt:"#FFFFFF",sub:"#E9A8D0",ring:"#FF4FA3",price:3},
+ {id:"yectos",name:"Los Yectos",face:"#0A0A0A",track:"#2A2A2A",tick:"#C9CED6",txt:"#E9EDF2",sub:"#9AA3AF",ring:"#C9CED6",price:3,brand:"LOS YECTOS × BB"}];
+const GAUGES={boost:{label:"BOOST",min:-15,max:25,note:"Presión del turbo"},rpm:{label:"RPM",min:0,max:8000,note:"Revoluciones del motor"},
+ oil:{label:"ACEITE",min:40,max:150,note:"Temperatura de aceite"},water:{label:"AGUA",min:40,max:120,note:"Temperatura del refrigerante"},
+ afr:{label:"AFR",min:10,max:18,note:"Mezcla aire/combustible (ECU)"},iat:{label:"ADMISIÓN",min:0,max:80,note:"Temperatura del aire de admisión"},volt:{label:"BATERÍA",min:10,max:16,note:"Voltaje"}};
+const DEFAULTS={color:"#E10600",skin:"clasico",owned:["clasico","carbono","minimal","retro"],psi:true,cel:true,bright:80,night:true,bootOn:true,
+ shift:6300,boostMax:22,waterMax:105,oilMax:130,afrMax:13.5,flashOn:true,start:"boost",shown:["boost","rpm","oil","water","afr"],hasLogo:false};
+
+/* ===== Estado ===== */
+let S=structuredClone(DEFAULTS),saved=JSON.stringify(S),DEV={model:"R",serial:"BBG-DEMO-0000",fw:"demo"},DEMO=true,LIVE={},cur="boost",logoURL="";
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const dirty=()=>JSON.stringify(S)!==saved;
+const toast=(m)=>{const t=$("#toast");t.textContent=m;t.classList.add("on");clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove("on"),2600)};
+
+/* ===== API del gauge (si no responde: modo demo) ===== */
+async function api(path,opt){const r=await fetch(path,{cache:"no-store",...opt});if(!r.ok)throw new Error(await r.text()||r.status);return r.headers.get("content-type")?.includes("json")?r.json():r.text()}
+async function boot(){
+ try{const st=await Promise.race([api("/api/state"),new Promise((_,j)=>setTimeout(()=>j(new Error("t")),2500))]);
+  DEMO=false;S={...DEFAULTS,...st.settings};DEV=st.device;saved=JSON.stringify(S);if(S.hasLogo)logoURL="/logo.png?"+Date.now();
+ }catch(e){DEMO=true;try{const p=new URLSearchParams(location.search).get("modelo");if(p==="X")DEV.model="X"}catch(_){}}
+ document.body.classList.toggle("demo",DEMO);$("#app").classList.toggle("demo",DEMO);
+ $("#dot").classList.toggle("demo",DEMO);$("#conn").textContent=DEMO?"Demo":"Conectado · "+(DEV.model==="X"?"X-Model":"R-Model 52 mm");
+ $("#serial").textContent=DEV.serial;cur=S.start;renderAll();loop();
+ if(!DEMO)setInterval(async()=>{try{LIVE=await api("/api/live")}catch(e){}},400);
+}
+/* simulación de manejo para la demo y como respaldo */
+let simT=0;function sim(dt){simT+=dt;const c=(simT%9)/9,thr=c<.75?c/.75:1-(c-.75)/.25*1;
+ const rpm=900+thr*6800+Math.sin(simT*9)*40;return{rpm,boost:-12+thr*30,oil:104+Math.sin(simT/5)*3,water:88+Math.sin(simT/7)*2,afr:14.7-thr*3.2,iat:34+thr*8,volt:14.1}}
+const val=k=>{const v=(!DEMO&&LIVE&&LIVE[k]!=null)?LIVE[k]:SIMV[k];return v};let SIMV=sim(0);
+
+/* ===== Formatos ===== */
+const tC=c=>S.cel?Math.round(c):Math.round(c*9/5+32),tU=()=>S.cel?"°C":"°F";
+const pB=v=>S.psi?v.toFixed(1):(v*0.0689).toFixed(2),pU=()=>S.psi?"PSI":"BAR";
+function fmt(k,v){if(k==="boost")return[pB(v),pU()];if(k==="rpm")return[Math.round(v/10)*10+"","RPM"];if(k==="afr")return[v.toFixed(1),"AFR"];if(k==="volt")return[v.toFixed(1),"V"];return[tC(v)+"",tU()]}
+function zoneOf(k,v){if(k==="rpm"&&v>=S.shift)return v>=S.shift+400?"r":"g";if(k==="boost"&&v>=S.boostMax)return"r";if(k==="water"&&v>=S.waterMax)return"r";if(k==="oil"&&v>=S.oilMax)return"r";if(k==="afr"&&v>=S.afrMax&&val("boost")>2)return"r";return""}
+
+/* ===== Gauge redondo (SVG) ===== */
+const NS="http://www.w3.org/2000/svg";
+function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);p&&p.append(e);return e}
+let G={};
+function buildGauge(){const s=$("#gauge");s.innerHTML="";
+ const d=el("defs",{},s),pt=el("pattern",{id:"carbon",width:8,height:8,patternUnits:"userSpaceOnUse"},d);el("rect",{width:8,height:8,fill:"#161616"},pt);el("rect",{width:4,height:4,fill:"#232323"},pt);el("rect",{x:4,y:4,width:4,height:4,fill:"#232323"},pt);
+ el("circle",{cx:120,cy:120,r:118,fill:"#050505"},s);G.face=el("circle",{cx:120,cy:120,r:111,"stroke-width":3},s);
+ G.track=el("circle",{cx:120,cy:120,r:92,fill:"none","stroke-width":10,"stroke-dasharray":"433.5 578",transform:"rotate(135 120 120)","stroke-linecap":"round"},s);
+ G.arc=el("circle",{cx:120,cy:120,r:92,fill:"none","stroke-width":10,"stroke-dasharray":"0 578",transform:"rotate(135 120 120)","stroke-linecap":"round"},s);
+ G.ticks=[];for(let i=0;i<=10;i++){const a=(-225+27*i)*Math.PI/180;G.ticks.push(el("line",{x1:120+80*Math.cos(a),y1:120+80*Math.sin(a),x2:120+71*Math.cos(a),y2:120+71*Math.sin(a),"stroke-width":2},s))}
+ G.needle=el("line",{x1:120,y1:66,x2:120,y2:34,"stroke-width":4,"stroke-linecap":"round"},s);G.hub={setAttribute(){}};
+ const T=(y,sz,w,ls)=>el("text",{x:120,y,"text-anchor":"middle","font-family":"Barlow Condensed,Oswald,Arial Narrow,Impact,sans-serif","font-weight":w,"font-size":sz,"letter-spacing":ls},s);
+ G.lab=T(88,15,700,3);G.val=T(146,54,800,0);G.unit=T(166,12,700,1);G.zone=T(196,12,700,3);G.brand=T(214,10,700,3);
+ G.boot=el("g",{opacity:0},s);el("circle",{cx:120,cy:120,r:111,fill:"#000"},G.boot);G.bootImg=el("image",{x:60,y:60,width:120,height:120},G.boot);
+ G.bootTxt=el("text",{x:120,y:128,"text-anchor":"middle","font-family":"Barlow Condensed,Impact,sans-serif","font-weight":800,"font-size":26,fill:"#fff","letter-spacing":2},G.boot);
+}
+/* ===== Panel X-Model (SVG) ===== */
+let P={};
+function buildPanel(){const s=$("#panel");s.innerHTML="";el("rect",{x:2,y:2,width:396,height:236,rx:14,fill:"#050505",stroke:"#2A2A2A","stroke-width":2},s);
+ P.bg=el("rect",{x:8,y:8,width:384,height:224,rx:10},s);P.leds=[];for(let i=0;i<20;i++){const x=20+i*18;P.leds.push(el("path",{d:`M${x+3} 16H${x+16}L${x+13} 30H${x}Z`},s))}
+ const F="Barlow Condensed,Oswald,Arial Narrow,Impact,sans-serif";
+ P.ring=el("circle",{cx:200,cy:140,r:70,fill:"none","stroke-width":8,"stroke-dasharray":"330 440",transform:"rotate(135 200 140)","stroke-linecap":"round"},s);
+ P.arc=el("circle",{cx:200,cy:140,r:70,fill:"none","stroke-width":8,"stroke-dasharray":"0 440",transform:"rotate(135 200 140)","stroke-linecap":"round"},s);
+ P.gear=el("text",{x:200,y:158,"text-anchor":"middle","font-family":F,"font-weight":800,"font-size":62},s);P.rpm=el("text",{x:200,y:182,"text-anchor":"middle","font-family":F,"font-weight":700,"font-size":14},s);
+ P.cards=[];[[16,44],[16,138],[300,44],[300,138]].forEach(([x,y])=>{const g=el("g",{},s);el("rect",{x,y,width:84,height:86,rx:8,fill:"rgba(255,255,255,.04)",stroke:"#2A2A2A"},g);
+  const l=el("text",{x:x+8,y:y+18,"font-family":F,"font-weight":700,"font-size":11,"letter-spacing":1.5},g),v=el("text",{x:x+8,y:y+56,"font-family":F,"font-weight":800,"font-size":30},g),u=el("text",{x:x+8,y:y+74,"font-family":F,"font-weight":700,"font-size":10},g);P.cards.push({l,v,u})});
+ P.brand=el("text",{x:200,y:224,"text-anchor":"middle","font-family":F,"font-weight":700,"font-size":9,"letter-spacing":3},s);
+}
+
+/* ===== Dibujo en vivo ===== */
+function skin(){return SKINS.find(x=>x.id===S.skin)||SKINS[0]}
+let booting=0;
+function draw(){const sk=skin();
+ if(DEV.model==="X")return drawPanel(sk);
+ const k=cur,g=GAUGES[k],v=val(k),f=Math.max(0,Math.min(1,(v-g.min)/(g.max-g.min))),z=S.flashOn?zoneOf(k,v):"";
+ const zc=z==="g"?"#22C55E":z==="r"?"#FF2A1F":S.color;
+ G.face.setAttribute("fill",sk.face);G.face.setAttribute("stroke",z?zc:sk.ring);G.track.setAttribute("stroke",sk.track);
+ G.arc.setAttribute("stroke",zc);G.arc.setAttribute("stroke-dasharray",(433.5*f).toFixed(1)+" 578");
+ G.ticks.forEach(t=>t.setAttribute("stroke",sk.tick));G.needle.setAttribute("stroke",zc);G.hub.setAttribute("fill",zc);G.needle.setAttribute("transform",`rotate(${(-135+270*f).toFixed(1)} 120 120)`);
+ const[vt,ut]=fmt(k,v);G.lab.textContent=g.label;G.val.textContent=vt;G.unit.textContent=ut;G.zone.textContent=z==="g"?"CAMBIA YA":z==="r"?"ALERTA":"";G.brand.textContent=sk.brand||"BB GAUGES";
+ [G.lab,G.unit,G.brand].forEach(t=>t.setAttribute("fill",sk.sub));G.val.setAttribute("fill",sk.txt);G.zone.setAttribute("fill",zc);
+ const s=$("#gauge");s.classList.toggle("flash",!!z);s.style.filter=z?`drop-shadow(0 0 18px ${zc}aa)`:"";s.style.opacity=.35+.65*S.bright/100;
+}
+function drawPanel(sk){const rpm=val("rpm"),f=Math.min(1,rpm/8000),z=S.flashOn?zoneOf("rpm",rpm):"",zc=z==="g"?"#22C55E":z==="r"?"#FF2A1F":S.color;
+ P.bg.setAttribute("fill",sk.face==="url(#carbon)"?"#151515":sk.face);P.ring.setAttribute("stroke",sk.track);P.arc.setAttribute("stroke",zc);P.arc.setAttribute("stroke-dasharray",(330*f).toFixed(1)+" 440");
+ const lit=Math.round(Math.min(1,rpm/S.shift)*20),blink=z==="r"&&(Math.floor(performance.now()/90)%2);
+ P.leds.forEach((l,i)=>{let c="#1d1d1d";if(i<lit)c=i>=17?"#FF2A1F":i>=14?"#22C55E":sk.tick;if(z==="g"&&i<lit)c="#22C55E";if(z==="r")c=blink?"#2a0806":"#FF2A1F";l.setAttribute("fill",c)});
+ const gear=rpm<1200?"N":String(Math.min(6,1+Math.floor(simT%9/1.6)));P.gear.textContent=gear;P.gear.setAttribute("fill",z?zc:sk.txt);P.rpm.textContent=(Math.round(rpm/10)*10).toLocaleString("en-US")+" RPM";P.rpm.setAttribute("fill",sk.sub);
+ const ks=S.shown.filter(k=>k!=="rpm").concat(["boost","water","oil","afr"]).filter((k,i,a)=>a.indexOf(k)===i).slice(0,4);
+ P.cards.forEach((c,i)=>{const k=ks[i],g=GAUGES[k],v=val(k),[vt,ut]=fmt(k,v),zz=S.flashOn?zoneOf(k,v):"";c.l.textContent=g.label;c.v.textContent=vt;c.u.textContent=ut;
+  c.l.setAttribute("fill",sk.sub);c.u.setAttribute("fill",sk.sub);c.v.setAttribute("fill",zz==="r"?"#FF2A1F":sk.txt)});
+ P.brand.textContent=sk.brand||"BB GAUGES";P.brand.setAttribute("fill",sk.sub);
+ const s=$("#panel");s.style.filter=z?`drop-shadow(0 0 14px ${zc}aa)`:"";s.style.opacity=.35+.65*S.bright/100;
+}
+let last=performance.now();
+function loop(){const now=performance.now(),dt=Math.min(.1,(now-last)/1000);last=now;if(!booting){SIMV=sim(dt);draw()}requestAnimationFrame(loop)}
+
+/* arranque: tu logo → BoostBang → barrido */
+async function playBoot(){if(booting||DEV.model==="X"&&!G.boot)return;const isX=DEV.model==="X";if(isX){toast("El arranque del X-Model se ve en el gauge");return}
+ booting=1;const b=G.boot;const w=ms=>new Promise(r=>setTimeout(r,ms));
+ b.setAttribute("opacity",1);if(logoURL){G.bootImg.setAttribute("href",logoURL);G.bootTxt.textContent=""}else{G.bootImg.removeAttribute("href");G.bootTxt.textContent="TU LOGO"}
+ await w(1300);G.bootImg.removeAttribute("href");G.bootTxt.textContent="BOOSTBANG";await w(1100);b.setAttribute("opacity",0);
+ const k=cur;for(let i=0;i<=30;i++){SIMV[k]=GAUGES[k].min+(GAUGES[k].max-GAUGES[k].min)*(i<=15?i/15:(30-i)/15);draw();await w(28)}booting=0}
+
+/* ===== Controles ===== */
+function renderAll(){
+ $("#app").classList.toggle("isX",DEV.model==="X");
+ $$("[data-model]").forEach(b=>b.setAttribute("aria-pressed",b.dataset.model===DEV.model));
+ $("#colors").innerHTML=COLORS.map(([n,c])=>`<button type="button" aria-label="${n}" aria-pressed="${S.color===c}" style="background:${c};--c:${c}" data-c="${c}"></button>`).join("");
+ $$("[data-u]").forEach(b=>b.setAttribute("aria-pressed",(b.dataset.u==="psi")===S.psi));$$("[data-t]").forEach(b=>b.setAttribute("aria-pressed",(b.dataset.t==="C")===S.cel));
+ $("#bright").value=S.bright;$("#brightV").textContent=S.bright+" %";$("#night").checked=S.night;$("#bootOn").checked=S.bootOn;
+ $("#logoPrev").innerHTML=logoURL?`<img src="${logoURL}" alt="Tu logo">`:"TU LOGO";
+ $("#meHelp").textContent=DEV.model==="X"?"Las RPM y la marcha van al centro. Elige los medidores de los lados (los primeros 4 marcados).":"Elige qué medidores aparecen al deslizar el dedo. Toca uno para que sea el que sale al encender.";
+ $("#mlist").innerHTML=Object.keys(GAUGES).map(k=>`<div class="mi ${k===S.start?"cur":""}"><button type="button" data-start="${k}"><b>${GAUGES[k].label}</b><small>${GAUGES[k].note}${k===S.start?" · al encender":""}</small></button><label>Mostrar<input type="checkbox" data-show="${k}" ${S.shown.includes(k)?"checked":""}></label></div>`).join("");
+ for(const id of["shift","boostMax","waterMax","oilMax","afrMax"])$("#"+id).value=S[id];
+ $("#shiftV").textContent=S.shift.toLocaleString("en-US")+" RPM";$("#boostV").textContent=pB(S.boostMax)+" "+pU().toLowerCase();$("#waterV").textContent=tC(S.waterMax)+" "+tU();$("#oilV").textContent=tC(S.oilMax)+" "+tU();$("#afrV").textContent=(+S.afrMax).toFixed(1);
+ $("#flashOn").checked=S.flashOn;
+ $("#skins").innerHTML=SKINS.map(s=>{const own=S.owned.includes(s.id);return`<button type="button" class="sk" aria-pressed="${S.skin===s.id}" data-skin="${s.id}"><i style="background:${s.css||s.face};color:${s.txt};border-color:${s.ring}">88</i><b>${s.name}</b><small class="${own?"":"p"}">${own?"Incluido":"$"+s.price+" · Premium"}</small></button>`}).join("");
+ const sk=skin(),locked=!S.owned.includes(sk.id);$("#skinName").textContent=sk.name;$("#lockBadge").hidden=!locked;$("#codeCard").style.display=DEMO?"none":"";
+ renderFoot(locked,sk);
+}
+function renderFoot(locked,sk){const f=$("#foot");
+ if(locked){const msg=encodeURIComponent(`¡Hola BoostBang! Quiero comprar el skin "${sk.name}" ($${sk.price}) para mi BB Gauge.${DEMO?"":"\nSerie: "+DEV.serial}`);
+  f.innerHTML=`<a class="big wa" href="https://wa.me/${WA}?text=${msg}" target="_blank" rel="noopener">COMPRAR ${sk.name.toUpperCase()} · $${sk.price}</a><span class="hint">Te enviamos el código de activación por WhatsApp.</span>`;return}
+ if(DEMO){const msg=encodeURIComponent(`¡Hola BoostBang! Me interesa un BB Gauge ${DEV.model==="X"?"X-Model":"R-Model 52 mm"} con skin ${sk.name} y color ${(COLORS.find(c=>c[1]===S.color)||["Rojo"])[0]}.\nMi carro es (marca, modelo y año): `);
+  f.innerHTML=`<a class="big wa" href="https://wa.me/${WA}?text=${msg}" target="_blank" rel="noopener">PEDIR MI BB GAUGE ASÍ</a><span class="hint">El mensaje lleva el modelo, skin y color que elegiste.</span>`;return}
+ f.innerHTML=`<button class="big" type="button" id="saveBtn" ${dirty()?"":"disabled"}>${dirty()?"GUARDAR EN EL GAUGE":"GUARDADO ✓"}</button><span class="hint">${dirty()?"Tienes cambios sin guardar":"El gauge ya tiene esta configuración"}</span>`;
+ $("#saveBtn").onclick=save}
+async function save(){const b=$("#saveBtn");b.disabled=true;b.textContent="GUARDANDO…";
+ try{await api("/api/settings",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(S)});saved=JSON.stringify(S);toast("Listo, el gauge ya cambió");}catch(e){toast("No se pudo guardar: "+e.message)}renderAll()}
+function set(o){Object.assign(S,o);renderAll();
+ /* en el gauge real, la vista previa también se aplica a la pantalla sin guardar */
+ if(!DEMO)api("/api/preview",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(S)}).catch(()=>{})}
+
+document.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)return;const d=t.dataset;
+ if(d.tab){$$(".tabs button").forEach(b=>b.setAttribute("aria-selected",b===t));$$("section").forEach(s=>s.classList.toggle("on",s.id==="t-"+d.tab));}
+ else if(d.c)set({color:d.c});else if(d.u)set({psi:d.u==="psi"});else if(d.t)set({cel:d.t==="C"});
+ else if(d.skin)set({skin:d.skin});else if(d.start){cur=d.start;set({start:d.start,shown:S.shown.includes(d.start)?S.shown:[...S.shown,d.start]})}
+ else if(d.model&&DEMO){DEV.model=d.model;renderAll()}
+});
+document.addEventListener("change",e=>{const t=e.target;
+ if(t.dataset.show){const k=t.dataset.show;let sh=S.shown.filter(x=>x!==k);if(t.checked)sh.push(k);if(!sh.length){t.checked=true;return toast("Deja al menos un medidor")}
+  if(!sh.includes(cur))cur=sh[0];set({shown:sh,start:sh.includes(S.start)?S.start:sh[0]})}
+ else if(t.id==="night"||t.id==="bootOn"||t.id==="flashOn")set({[t.id]:t.checked});
+});
+document.addEventListener("input",e=>{const t=e.target;if(t.type!=="range")return;const v=+t.value;
+ set({[t.id]:v});if(t.id==="shift")cur="rpm";if(t.id==="boostMax")cur="boost";if(t.id==="waterMax")cur="water";if(t.id==="oilMax")cur="oil";if(t.id==="afrMax")cur="afr";
+ if(DEV.model!=="X"&&!S.shown.includes(cur))S.shown.push(cur)});
+const step=d=>{const o=S.shown;const i=o.indexOf(cur);cur=o[(i+d+o.length)%o.length]};
+$("#prevG").onclick=()=>step(-1);$("#nextG").onclick=()=>step(1);
+{let sx=null;const g=$("#gauge");g.addEventListener("pointerdown",e=>sx=e.clientX);g.addEventListener("pointerup",e=>{if(sx!=null&&Math.abs(e.clientX-sx)>40)step(e.clientX<sx?1:-1);sx=null})}
+$("#bootBtn").onclick=playBoot;
+
+/* logo: se achica a 240×240 en el celular antes de subirlo */
+$("#logoIn").onchange=async e=>{const f=e.target.files[0];if(!f)return;
+ const img=await createImageBitmap(f),c=document.createElement("canvas");c.width=c.height=240;const x=c.getContext("2d"),k=Math.min(240/img.width,240/img.height);
+ x.drawImage(img,(240-img.width*k)/2,(240-img.height*k)/2,img.width*k,img.height*k);
+ const blob=await new Promise(r=>c.toBlob(r,"image/png"));logoURL=URL.createObjectURL(blob);
+ if(!DEMO){try{const fd=new FormData();fd.append("logo",blob,"logo.png");await api("/api/logo",{method:"POST",body:fd});S.hasLogo=true;saved=JSON.stringify({...JSON.parse(saved),hasLogo:true});toast("Logo guardado en el gauge")}catch(err){toast("No se pudo subir el logo: "+err.message)}}
+ renderAll();playBoot()};
+
+/* código de skin comprado */
+$("#codeBtn").onclick=async()=>{const code=$("#code").value.trim().toUpperCase();if(!code)return;
+ try{const r=await api("/api/unlock",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({code})});
+  S.owned=r.owned;S.skin=r.skin;saved=JSON.stringify({...JSON.parse(saved),owned:r.owned});toast("¡Skin activado!");$("#code").value="";renderAll()}catch(e){toast("Código no válido para este gauge")}};
+
+addEventListener("beforeunload",e=>{if(!DEMO&&dirty()){e.preventDefault();e.returnValue=""}});
+buildGauge();buildPanel();boot();
+</script>
+</body>
+</html>
