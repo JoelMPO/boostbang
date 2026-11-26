@@ -60,6 +60,10 @@ input[type=checkbox]{width:22px;height:22px;accent-color:var(--y)}
 .sk{display:flex;flex-direction:column;align-items:center;gap:7px;padding:14px 8px;border-radius:14px;background:#121212;border:2px solid #222;cursor:pointer}
 .sk[aria-pressed=true]{border-color:var(--y)}
 .sk i{width:72px;height:72px;border-radius:50%;border:3px solid #333;display:grid;place-items:center;font:normal 800 20px var(--hd)}
+.sk i.rx{place-items:stretch;width:118px;height:70px;border-radius:9px;display:grid;grid-template-columns:24px 1fr 24px;grid-template-rows:8px 1fr;gap:4px;padding:6px;box-sizing:border-box;font-size:26px}
+.sk i.rx .l{grid-column:1/4;border-radius:2px}
+.sk i.rx .c{display:grid;place-items:center;line-height:1}
+.sk i.rx .s{border-radius:4px;opacity:.85}
 .sk b{font:700 16px var(--hd);letter-spacing:.04em}.sk small{font-weight:600;color:var(--mu)}.sk small.p{color:#FFB24D}
 .code{display:flex;gap:8px}.code input{flex:1;min-height:44px;border-radius:10px;border:1px solid #333;background:#0E0E0E;padding:0 12px;text-transform:uppercase;letter-spacing:.1em}
 .foot{position:fixed;left:0;right:0;bottom:0;padding:14px 18px calc(16px + env(safe-area-inset-bottom));background:linear-gradient(180deg,rgba(11,11,11,0),#0B0B0B 30%);display:flex;justify-content:center;z-index:9}
@@ -148,16 +152,17 @@ input[type=checkbox]{width:22px;height:22px;accent-color:var(--y)}
 const WA="50769502405";
 const COLORS=[["Rojo","#E10600"],["Naranja","#FF7A00"],["Azul","#2F7BFF"],["Turquesa","#1FB8A6"],["Lila","#B57BFF"],["Hueso","#EDE6D6"]];
 const SKINS=[
+ {id:"original",name:"BB Original",face:"url(#carbon2)",track:"#1C1C1C",tick:"#EDE6D6",txt:"#FFFFFF",sub:"#A8A396",ring:"#000000",price:0,scale:true,css:"repeating-linear-gradient(45deg,rgba(255,255,255,.05) 0 2px,transparent 2px 6px),#0A0A0A"},
  {id:"clasico",name:"Clásico",face:"#0E0E0E",track:"#262626",tick:"#F2EFE8",txt:"#FFFFFF",sub:"#A39E93",ring:"#2A2A2A",price:0},
  {id:"carbono",name:"Carbono",face:"url(#carbon)",track:"#2E2E2E",tick:"#DADADA",txt:"#FFFFFF",sub:"#B5B0A6",ring:"#3A3A3A",price:0,css:"repeating-linear-gradient(45deg,#161616 0 4px,#232323 4px 8px)"},
  {id:"minimal",name:"Minimal",face:"#000000",track:"#1A1A1A",tick:"#555555",txt:"#FFFFFF",sub:"#8A857B",ring:"#111111",price:0},
  {id:"retro",name:"Retro hueso",face:"#EDE6D6",track:"#CFC6B2",tick:"#1A1A1A",txt:"#111111",sub:"#4A463F",ring:"#B9AF98",price:0},
  {id:"jdm",name:"JDM Night",face:"#14061A",track:"#2B1033",tick:"#FF4FA3",txt:"#FFFFFF",sub:"#E9A8D0",ring:"#FF4FA3",price:3},
  {id:"yectos",name:"Los Yectos",face:"#0A0A0A",track:"#2A2A2A",tick:"#C9CED6",txt:"#E9EDF2",sub:"#9AA3AF",ring:"#C9CED6",price:3,brand:"LOS YECTOS × BB"}];
-const GAUGES={boost:{label:"BOOST",min:-15,max:25,note:"Presión del turbo"},rpm:{label:"RPM",min:0,max:8000,note:"Revoluciones del motor"},
- oil:{label:"ACEITE",min:40,max:150,note:"Temperatura de aceite"},water:{label:"AGUA",min:40,max:120,note:"Temperatura del refrigerante"},
- afr:{label:"AFR",min:10,max:18,note:"Mezcla aire/combustible (ECU)"},iat:{label:"ADMISIÓN",min:0,max:80,note:"Temperatura del aire de admisión"},volt:{label:"BATERÍA",min:10,max:16,note:"Voltaje"}};
-const DEFAULTS={color:"#E10600",skin:"clasico",owned:["clasico","carbono","minimal","retro"],psi:true,cel:true,bright:80,night:true,bootOn:true,
+const GAUGES={boost:{label:"BOOST",step:5,min:-15,max:25,note:"Presión del turbo"},rpm:{label:"RPM",step:1000,div:1000,min:0,max:8000,note:"Revoluciones del motor"},
+ oil:{label:"ACEITE",step:20,min:40,max:140,note:"Temperatura de aceite"},water:{label:"AGUA",step:20,min:40,max:120,note:"Temperatura del refrigerante"},
+ afr:{label:"AFR",step:1,min:10,max:18,note:"Mezcla aire/combustible (ECU)"},iat:{label:"ADMISIÓN",step:20,min:0,max:80,note:"Temperatura del aire de admisión"},volt:{label:"BATERÍA",step:1,min:10,max:16,note:"Voltaje"}};
+const DEFAULTS={color:"#E10600",skin:"original",owned:["original","clasico","carbono","minimal","retro"],psi:true,cel:true,bright:80,night:true,bootOn:true,
  shift:6300,boostMax:22,waterMax:105,oilMax:130,afrMax:13.5,flashOn:true,start:"boost",shown:["boost","rpm","oil","water","afr"],hasLogo:false};
 
 /* ===== Estado ===== */
@@ -194,16 +199,30 @@ function el(t,a,p){const e=document.createElementNS(NS,t);for(const k in a)e.set
 let G={};
 function buildGauge(){const s=$("#gauge");s.innerHTML="";
  const d=el("defs",{},s),pt=el("pattern",{id:"carbon",width:8,height:8,patternUnits:"userSpaceOnUse"},d);el("rect",{width:8,height:8,fill:"#161616"},pt);el("rect",{width:4,height:4,fill:"#232323"},pt);el("rect",{x:4,y:4,width:4,height:4,fill:"#232323"},pt);
+ const p2=el("pattern",{id:"carbon2",width:6,height:6,patternUnits:"userSpaceOnUse",patternTransform:"rotate(45)"},d);el("rect",{width:6,height:6,fill:"#0A0A0A"},p2);el("rect",{width:2,height:6,fill:"#151515"},p2);
  el("circle",{cx:120,cy:120,r:118,fill:"#050505"},s);G.face=el("circle",{cx:120,cy:120,r:111,"stroke-width":3},s);
  G.track=el("circle",{cx:120,cy:120,r:92,fill:"none","stroke-width":10,"stroke-dasharray":"433.5 578",transform:"rotate(135 120 120)","stroke-linecap":"round"},s);
+ G.zones=el("g",{},s);
  G.arc=el("circle",{cx:120,cy:120,r:92,fill:"none","stroke-width":10,"stroke-dasharray":"0 578",transform:"rotate(135 120 120)","stroke-linecap":"round"},s);
+ G.scale=el("g",{},s);
  G.ticks=[];for(let i=0;i<=10;i++){const a=(-225+27*i)*Math.PI/180;G.ticks.push(el("line",{x1:120+80*Math.cos(a),y1:120+80*Math.sin(a),x2:120+71*Math.cos(a),y2:120+71*Math.sin(a),"stroke-width":2},s))}
  G.needle=el("line",{x1:120,y1:66,x2:120,y2:34,"stroke-width":4,"stroke-linecap":"round"},s);G.hub={setAttribute(){}};
  const T=(y,sz,w,ls)=>el("text",{x:120,y,"text-anchor":"middle","font-family":"Barlow Condensed,Oswald,Arial Narrow,Impact,sans-serif","font-weight":w,"font-size":sz,"letter-spacing":ls},s);
  G.lab=T(88,15,700,3);G.val=T(146,54,800,0);G.unit=T(166,12,700,1);G.zone=T(196,12,700,3);G.brand=T(214,10,700,3);
+ G.badge=el("g",{},s);G.badgeR=el("rect",{x:80,y:183,width:80,height:18,transform:"skewX(-12)",style:"transform-box:fill-box;transform-origin:center"},G.badge);G.badgeT=T(196,11,700,2);G.badge.append(G.badgeT);
  G.boot=el("g",{opacity:0},s);el("circle",{cx:120,cy:120,r:111,fill:"#000"},G.boot);G.bootImg=el("image",{x:60,y:60,width:120,height:120},G.boot);
  G.bootTxt=el("text",{x:120,y:128,"text-anchor":"middle","font-family":"Barlow Condensed,Impact,sans-serif","font-weight":800,"font-size":26,fill:"#fff","letter-spacing":2},G.boot);
 }
+const peak={};let scaleKey="";
+function zonesOf(k){const g=GAUGES[k];if(k==="rpm")return[[S.shift,S.shift+400,"#0E3A1E"],[S.shift+400,g.max,"#4A0D0A"]];if(k==="boost")return[[S.boostMax,g.max,"#4A0D0A"]];
+ if(k==="water")return[[S.waterMax,g.max,"#4A0D0A"]];if(k==="oil")return[[S.oilMax,g.max,"#4A0D0A"]];if(k==="afr")return[[S.afrMax,g.max,"#4A0D0A"]];if(k==="volt")return[[g.min,12,"#4A0D0A"],[15,g.max,"#4A0D0A"]];return[[60,g.max,"#4A0D0A"]]}
+function drawScale(sk,k,g){const key=[sk.id,k,S.shift,S.boostMax,S.waterMax,S.oilMax,S.afrMax,S.psi,S.cel].join();if(key===scaleKey)return;scaleKey=key;
+ G.zones.innerHTML="";G.scale.innerHTML="";if(!sk.scale)return;
+ const fr=x=>Math.max(0,Math.min(1,(x-g.min)/(g.max-g.min)));
+ zonesOf(k).forEach(([a,b,c])=>{const A=fr(a)*433.5,B=fr(b)*433.5;if(B>A)el("circle",{cx:120,cy:120,r:92,fill:"none",stroke:c,"stroke-width":10,"stroke-dasharray":(B-A).toFixed(1)+" 578","stroke-dashoffset":(-A).toFixed(1),transform:"rotate(135 120 120)"},G.zones)});
+ const n=Math.round((g.max-g.min)/g.step);for(let i=0;i<=n;i++){const f=i/n,val=g.min+i*g.step,a=(135+270*f)*Math.PI/180;
+  const hot=zonesOf(k).some(([x,y])=>val>=x&&val<=y);let t=g.div?String(val/g.div):k==="boost"?(S.psi?String(val):(val*0.0689).toFixed(1)):(["oil","water","iat"].includes(k)?String(tC(val)):String(val));
+  const e=el("text",{x:(120+60*Math.cos(a)).toFixed(1),y:(120+60*Math.sin(a)+4).toFixed(1),"text-anchor":"middle","font-family":"Barlow Condensed,Oswald,Arial Narrow,Impact,sans-serif","font-weight":600,"font-size":13,fill:hot?"#FF4D42":"#A8A396"},G.scale);e.textContent=t}}
 /* ===== Panel X-Model (SVG) ===== */
 let P={};
 function buildPanel(){const s=$("#panel");s.innerHTML="";el("rect",{x:2,y:2,width:396,height:236,rx:14,fill:"#050505",stroke:"#2A2A2A","stroke-width":2},s);
@@ -227,12 +246,17 @@ function draw(){const sk=skin();
  G.face.setAttribute("fill",sk.face);G.face.setAttribute("stroke",z?zc:sk.ring);G.track.setAttribute("stroke",sk.track);
  G.arc.setAttribute("stroke",zc);G.arc.setAttribute("stroke-dasharray",(433.5*f).toFixed(1)+" 578");
  G.ticks.forEach(t=>t.setAttribute("stroke",sk.tick));G.needle.setAttribute("stroke",zc);G.hub.setAttribute("fill",zc);G.needle.setAttribute("transform",`rotate(${(-135+270*f).toFixed(1)} 120 120)`);
+ drawScale(sk,k,g,z);
  const[vt,ut]=fmt(k,v);G.lab.textContent=g.label;G.val.textContent=vt;G.unit.textContent=ut;G.zone.textContent=z==="g"?"CAMBIA YA":z==="r"?"ALERTA":"";G.brand.textContent=sk.brand||"BB GAUGES";
  [G.lab,G.unit,G.brand].forEach(t=>t.setAttribute("fill",sk.sub));G.val.setAttribute("fill",sk.txt);G.zone.setAttribute("fill",zc);
+ if(sk.scale){peak[k]=Math.max(peak[k]??-1e9,v);const bz=z==="g"?["CAMBIA YA","#22C55E","#06140B"]:z==="r"?[k==="rpm"?"TE PASASTE":"ALERTA","#E10600","#FFFFFF"]:["MÁX "+fmt(k,peak[k])[0],"#161616","#A8A396"];
+  G.zone.textContent="";G.badge.style.display="";G.badgeR.setAttribute("fill",bz[1]);G.badgeT.setAttribute("fill",bz[2]);G.badgeT.textContent=bz[0];
+  G.val.setAttribute("font-size",46);G.val.setAttribute("y",140);G.val.setAttribute("fill",z==="g"?"#2BD46A":z==="r"?"#FF4D42":"#FFFFFF");G.lab.setAttribute("y",92)}
+ else{G.badge.style.display="none";G.val.setAttribute("font-size",54);G.val.setAttribute("y",146);G.lab.setAttribute("y",88)}
  const s=$("#gauge");s.classList.toggle("flash",!!z);s.style.filter=z?`drop-shadow(0 0 18px ${zc}aa)`:"";s.style.opacity=.35+.65*S.bright/100;
 }
 function drawPanel(sk){const rpm=val("rpm"),f=Math.min(1,rpm/8000),z=S.flashOn?zoneOf("rpm",rpm):"",zc=z==="g"?"#22C55E":z==="r"?"#FF2A1F":S.color;
- P.bg.setAttribute("fill",sk.face==="url(#carbon)"?"#151515":sk.face);P.ring.setAttribute("stroke",sk.track);P.arc.setAttribute("stroke",zc);P.arc.setAttribute("stroke-dasharray",(330*f).toFixed(1)+" 440");
+ P.bg.setAttribute("fill",sk.face.startsWith("url")?"#121212":sk.face);P.ring.setAttribute("stroke",sk.track);P.arc.setAttribute("stroke",zc);P.arc.setAttribute("stroke-dasharray",(330*f).toFixed(1)+" 440");
  const lit=Math.round(Math.min(1,rpm/S.shift)*20),blink=z==="r"&&(Math.floor(performance.now()/90)%2);
  P.leds.forEach((l,i)=>{let c="#1d1d1d";if(i<lit)c=i>=17?"#FF2A1F":i>=14?"#22C55E":sk.tick;if(z==="g"&&i<lit)c="#22C55E";if(z==="r")c=blink?"#2a0806":"#FF2A1F";l.setAttribute("fill",c)});
  const gear=rpm<1200?"N":String(Math.min(6,1+Math.floor(simT%9/1.6)));P.gear.textContent=gear;P.gear.setAttribute("fill",z?zc:sk.txt);P.rpm.textContent=(Math.round(rpm/10)*10).toLocaleString("en-US")+" RPM";P.rpm.setAttribute("fill",sk.sub);
@@ -265,7 +289,7 @@ function renderAll(){
  for(const id of["shift","boostMax","waterMax","oilMax","afrMax"])$("#"+id).value=S[id];
  $("#shiftV").textContent=S.shift.toLocaleString("en-US")+" RPM";$("#boostV").textContent=pB(S.boostMax)+" "+pU().toLowerCase();$("#waterV").textContent=tC(S.waterMax)+" "+tU();$("#oilV").textContent=tC(S.oilMax)+" "+tU();$("#afrV").textContent=(+S.afrMax).toFixed(1);
  $("#flashOn").checked=S.flashOn;
- $("#skins").innerHTML=SKINS.map(s=>{const own=S.owned.includes(s.id);return`<button type="button" class="sk" aria-pressed="${S.skin===s.id}" data-skin="${s.id}"><i style="background:${s.css||s.face};color:${s.txt};border-color:${s.ring}">88</i><b>${s.name}</b><small class="${own?"":"p"}">${own?"Incluido":"$"+s.price+" · Premium"}</small></button>`}).join("");
+ $("#skins").innerHTML=SKINS.map(s=>{const own=S.owned.includes(s.id);return`<button type="button" class="sk" aria-pressed="${S.skin===s.id}" data-skin="${s.id}">${DEV.model==="X"?`<i class="rx" style="background:${s.css||s.face};color:${s.txt};border-color:${s.ring}"><span class="l" style="background:linear-gradient(90deg,${s.tick} 0 62%,#22C55E 62% 80%,#FF2A1F 80%)"></span><span class="s" style="border:1px solid ${s.ring};background:rgba(255,255,255,.06)"></span><span class="c">3</span><span class="s" style="border:1px solid ${s.ring};background:rgba(255,255,255,.06)"></span></i>`:`<i style="background:${s.css||s.face};color:${s.txt};border-color:${s.ring}">88</i>`}<b>${s.name}</b><small class="${own?"":"p"}">${own?"Incluido":"$"+s.price+" · Premium"}</small></button>`}).join("");
  const sk=skin(),locked=!S.owned.includes(sk.id);$("#skinName").textContent=sk.name;$("#lockBadge").hidden=!locked;$("#codeCard").style.display=DEMO?"none":"";
  renderFoot(locked,sk);
 }
